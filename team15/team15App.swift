@@ -4,14 +4,13 @@
 //
 //  Created by aeshah mohammed alabdulkarim on 20/11/2025.
 //
-
 import SwiftUI
 
 @main
 struct team15App: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            FoodPage()   // ← your main screen
         }
     }
 }
