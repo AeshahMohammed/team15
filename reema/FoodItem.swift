@@ -165,7 +165,8 @@ struct FoodFullscreen: View {
                     HStack {
                         TextField("Add your own phrase", text: $customPhrase)
                             .textFieldStyle(.roundedBorder)
-                        
+                            .cornerRadius(30)
+
                         Button("Add") {
                             let trimmed = customPhrase.trimmingCharacters(in: .whitespaces)
                             if !trimmed.isEmpty {
@@ -177,7 +178,7 @@ struct FoodFullscreen: View {
                         .padding(.vertical, 10)
                         .background(item.color)
                         .foregroundColor(.white)
-                        .cornerRadius(12)
+                        .cornerRadius(30)
                     }
                 }
                 .padding(.horizontal)

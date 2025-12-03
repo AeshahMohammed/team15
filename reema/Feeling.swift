@@ -4,10 +4,9 @@
 //
 //  Created by aeshah mohammed alabdulkarim on 03/12/2025.
 //
-
-
 import SwiftUI
 
+// Feelings data model (unchanged)
 struct Feeling: Identifiable {
     let id = UUID()
     let name: String
@@ -58,10 +57,7 @@ struct feelingspage: View {
     }
 }
 
-
-// ------------------------------------------------------------
-// ------------------------------------------------------------
-
+// Large card (unchanged)
 struct FeelingBigCard: View {
     let activity: Feeling
     
@@ -85,17 +81,39 @@ struct FeelingBigCard: View {
     }
 }
 
+// -----------------------------
+// Matching Phrase Bubble (added)
+// -----------------------------
+struct FeelingPhraseBubble: View {
+    let text: String
+    let color: Color
+    
+    var body: some View {
+        HStack {
+            Text(text)
+                .font(.system(size: 20, weight: .medium))
+                .padding(.vertical, 12)
+            Spacer()
+        }
+        .padding(.horizontal, 16)
+        .frame(maxWidth: .infinity)
+        .background(color.opacity(0.3))
+        .cornerRadius(15)
+    }
+}
 
-// ------------------------------------------------------------
-// ------------------------------------------------------------
-
+// Fullscreen view (only modified where we agreed)
+// - spacing/emoji/title sizes updated to match Food
+// - replaced raw Text bubbles with FeelingPhraseBubble
+// - text field and Add button styling aligned with Food
+// - Close button styling aligned with Food
 struct FeelingFullScreenView: View {
+    @State private var selectedPhrases: [String] = []
     let activity: Feeling
     @Environment(\.dismiss) private var dismiss
     
     @State private var newText: String = ""
     @State private var sentences: [String] = []
-    
     
     init(activity: Feeling) {
         self.activity = activity
@@ -137,71 +155,84 @@ struct FeelingFullScreenView: View {
         _sentences = State(initialValue: defaults)
     }
     
-    
-    // ------------------------------------------------------------
-    
     var body: some View {
         ZStack {
             activity.color.opacity(0.15).ignoresSafeArea()
             
-            VStack(spacing: 60) {
+            VStack(spacing: 15) {
                 
-                // Emoji + Title
-                VStack(spacing: 12) {
-                    Text(activity.emoji).font(.system(size: 110))
-                    Text(activity.name).font(.system(size: 36, weight: .bold))
+                // Emoji + Title (sizes matched to Food)
+                VStack(spacing: 15) {
+                    Text(activity.emoji)
+                        .font(.system(size: 120))
+                    Text(activity.name.capitalized)
+                        .font(.system(size: 42, weight: .bold))
                 }
                 
-                
+                // Phrases using the shared bubble
                 ScrollView {
                     VStack(spacing: 12) {
                         ForEach(sentences, id: \.self) { text in
-                            
-                            Text(text)
-                                .padding()
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(RoundedRectangle(cornerRadius: 30).fill(activity.color.opacity(0.30)))
-                               
+                            FeelingPhraseBubble(
+                                text: text,
+                                color: selectedPhrases.contains(text) ? activity.color : activity.color.opacity(0.3)
+                            )
+                            .onTapGesture {
+                                toggleSelected(text)
+                            }
                         }
+
                     }
                     .padding(.horizontal)
                 }
                 
                 Spacer()
                 
-                
+        
+
+                // Add Phrase area (styled to match Food)
                 VStack(spacing: 12) {
                     HStack {
-                        TextField("Write something...", text: $newText)
-                            .padding()
-                            .background(.white)
+                        TextField("Add your own phrase", text: $newText)
+                            .textFieldStyle(.roundedBorder)
                             .cornerRadius(30)
-                        
+
                         Button("Add") {
                             addSentence()
                         }
-                        .padding(.horizontal, 18)
+                        .padding(.horizontal)
                         .padding(.vertical, 10)
                         .background(activity.color)
                         .foregroundColor(.white)
                         .cornerRadius(30)
                     }
-                    .padding(.horizontal)
-                    
-                    Button("Close") { dismiss() }
-                        .font(.system(size: 18, weight: .bold))
-                        .padding(.vertical, 12)
-                        .padding(.horizontal, 50)
-                        .background(Capsule().fill(activity.color))
-                        .foregroundColor(.white)
                 }
-                .padding(.bottom, 18)
+                .padding(.horizontal)
+                
+                // Close button (matched to Food)
+                Button("Close") { dismiss() }
+                    .font(.system(size: 22, weight: .bold))
+                    .padding(.horizontal, 40)
+                    .padding(.vertical, 12)
+                    .background(
+                        Capsule().fill(activity.color)
+                    )
+                    .foregroundColor(.white)
+                    .padding(.bottom, 20)
             }
+            .padding()
         }
     }
     
-    // ------------------------------------------------------------
-    // Functions
+    // Persistence helpers (unchanged)
+    private func toggleSelected(_ phrase: String) {
+        if selectedPhrases.contains(phrase) {
+            selectedPhrases.removeAll { $0 == phrase }
+        } else {
+            selectedPhrases.append(phrase)
+        }
+    }
+
     private func key() -> String { "SavedSentences_\(activity.name)" }
     
     private func save() { UserDefaults.standard.set(sentences, forKey: key()) }
@@ -220,4 +251,6 @@ struct FeelingFullScreenView: View {
     }
 }
 
-#Preview { feelingspage() }
+#Preview {
+    feelingspage()
+}

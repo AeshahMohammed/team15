@@ -180,6 +180,7 @@ struct PersonFullscreen: View {
                 HStack {
                     TextField("Add your own phrase", text: $customPhrase)
                         .textFieldStyle(.roundedBorder)
+                        .cornerRadius(30)
 
                     Button("Add") {
                         let trimmed = customPhrase.trimmingCharacters(in: .whitespaces)
@@ -192,7 +193,7 @@ struct PersonFullscreen: View {
                     .padding(.vertical, 10)
                     .background(color)
                     .foregroundColor(.white)
-                    .cornerRadius(12)
+                    .cornerRadius(30)
                 }
                 .padding(.horizontal)
 
