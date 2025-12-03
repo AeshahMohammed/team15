@@ -108,7 +108,7 @@ struct FeelingPhraseBubble: View {
 // - text field and Add button styling aligned with Food
 // - Close button styling aligned with Food
 struct FeelingFullScreenView: View {
-    @State private var selectedPhrases: [String] = []
+    @State private var selectedPhrase: String? = nil   // ← SINGLE SELECTION
     let activity: Feeling
     @Environment(\.dismiss) private var dismiss
     
@@ -161,7 +161,6 @@ struct FeelingFullScreenView: View {
             
             VStack(spacing: 15) {
                 
-                // Emoji + Title (sizes matched to Food)
                 VStack(spacing: 15) {
                     Text(activity.emoji)
                         .font(.system(size: 120))
@@ -169,28 +168,27 @@ struct FeelingFullScreenView: View {
                         .font(.system(size: 42, weight: .bold))
                 }
                 
-                // Phrases using the shared bubble
+                // BUBBLES
                 ScrollView {
                     VStack(spacing: 12) {
                         ForEach(sentences, id: \.self) { text in
                             FeelingPhraseBubble(
                                 text: text,
-                                color: selectedPhrases.contains(text) ? activity.color : activity.color.opacity(0.3)
+                                color: selectedPhrase == text
+                                    ? activity.color        // selected = solid color
+                                    : activity.color.opacity(0.3) // unselected = faded
                             )
                             .onTapGesture {
                                 toggleSelected(text)
                             }
                         }
-
                     }
                     .padding(.horizontal)
                 }
                 
                 Spacer()
                 
-        
-
-                // Add Phrase area (styled to match Food)
+                // Add Phrase
                 VStack(spacing: 12) {
                     HStack {
                         TextField("Add your own phrase", text: $newText)
@@ -209,7 +207,7 @@ struct FeelingFullScreenView: View {
                 }
                 .padding(.horizontal)
                 
-                // Close button (matched to Food)
+                // Close
                 Button("Close") { dismiss() }
                     .font(.system(size: 22, weight: .bold))
                     .padding(.horizontal, 40)
@@ -224,12 +222,12 @@ struct FeelingFullScreenView: View {
         }
     }
     
-    // Persistence helpers (unchanged)
+    // SINGLE selection only
     private func toggleSelected(_ phrase: String) {
-        if selectedPhrases.contains(phrase) {
-            selectedPhrases.removeAll { $0 == phrase }
+        if selectedPhrase == phrase {
+            selectedPhrase = nil         // tap again → unselect
         } else {
-            selectedPhrases.append(phrase)
+            selectedPhrase = phrase      // always keep only 1 selected
         }
     }
 
@@ -250,6 +248,8 @@ struct FeelingFullScreenView: View {
         save()
     }
 }
+
+
 
 #Preview {
     feelingspage()
