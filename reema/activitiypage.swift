@@ -1,21 +1,26 @@
 import SwiftUI
 
+// MARK: - Data Model
 struct Activity: Identifiable {
     let id = UUID()
-    let name: String
+    let englishName: String
+    let arabicName: String
     let emoji: String
     let color: Color
 }
 
+// MARK: - Main Activities Page
 struct activitiespage: View {
     
+    @AppStorage("isArabic") private var isArabic = false
+    
     private let activities: [Activity] = [
-        Activity(name: "Story Time", emoji: "📖", color: .purple),
-        Activity(name: "Drawing", emoji: "🎨", color: .orange),
-        Activity(name: "Dancing", emoji: "💃", color: .pink),
-        Activity(name: "Playtime", emoji: "🧸", color: .blue),
-        Activity(name: "Outside", emoji: "🌳", color: .green),
-        Activity(name: "Quiet Time", emoji: "🤫", color: .teal)
+        Activity(englishName: "story time", arabicName: "وقت القصة",   emoji: "📖", color: .purple),
+        Activity(englishName: "drawing",    arabicName: "الرسم",       emoji: "🎨", color: .orange),
+        Activity(englishName: "dancing",    arabicName: "الرقص",       emoji: "💃", color: .pink),
+        Activity(englishName: "playtime",   arabicName: "وقت اللعب",   emoji: "🧸", color: .blue),
+        Activity(englishName: "outside",    arabicName: "الخارج",      emoji: "🌳", color: .green),
+        Activity(englishName: "quiet time", arabicName: "وقت هادئ",    emoji: "🤫", color: .teal)
     ]
     
     @State private var selectedActivity: Activity? = nil
@@ -23,43 +28,67 @@ struct activitiespage: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                
-                // 🌟 SAME CLEAN BACKGROUND
+                // Same clean background
                 Color(.systemGray6)
                     .ignoresSafeArea()
                 
                 ScrollView {
                     VStack(spacing: 22) {
+                        
+                        // Language toggle
+                        HStack {
+                            Button(action: {
+                                withAnimation {
+                                    isArabic.toggle()
+                                }
+                            }) {
+                                Text(isArabic ? "A/ع" : "ع/A")
+                                    .font(.headline)
+                                    .foregroundColor(.black)
+                                    .padding(.horizontal, 20)
+                                    .padding(.vertical, 10)
+                                    .background(Color(red: 0.82, green: 0.88, blue: 1.0))
+                                    .cornerRadius(20)
+                                    .shadow(color: .gray.opacity(0.4), radius: 4, x: 0, y: 2)
+                            }
+                            
+                            Spacer()
+                        }
+                        .padding(.horizontal)
+                        .padding(.top, 8)
+                        
+                        // Activity cards
                         ForEach(activities) { activity in
-                            ActivityBigCard(activity: activity)
+                            ActivityBigCard(activity: activity, isArabic: isArabic)
                                 .onTapGesture {
                                     selectedActivity = activity
                                 }
                         }
                     }
-                    .padding()
+                    .padding(.bottom)
                 }
             }
-            .navigationTitle("Activities")
+            .navigationTitle(isArabic ? "الأنشطة" : "Activities")
             .navigationBarTitleDisplayMode(.large)
             .sheet(item: $selectedActivity) { activity in
                 ActivityFullScreenView(activity: activity)
             }
+            .environment(\.layoutDirection, isArabic ? .rightToLeft : .leftToRight)
         }
     }
 }
 
-// MARK: - Activity Card (same style as NeedBigCard)
-
+// MARK: - Activity Card
 struct ActivityBigCard: View {
     let activity: Activity
+    let isArabic: Bool
     
     var body: some View {
         HStack(spacing: 20) {
             Text(activity.emoji)
                 .font(.system(size: 60))
             
-            Text(activity.name)
+            Text(isArabic ? activity.arabicName : activity.englishName.capitalized)
                 .font(.system(size: 28, weight: .bold, design: .rounded))
                 .foregroundColor(.primary)
             
@@ -69,53 +98,227 @@ struct ActivityBigCard: View {
         .frame(maxWidth: .infinity)
         .background(
             RoundedRectangle(cornerRadius: 30)
-                .fill(activity.color.opacity(0.25))  // 🎨 Same soft pastel card style
+                .fill(activity.color.opacity(0.25))
+        )
+        .padding(.horizontal)
+    }
+}
+
+// MARK: - Phrase Bubble (for Activities)
+struct ActivityPhraseBubble: View {
+    let text: String
+    let isSelected: Bool
+    let color: Color
+    
+    var body: some View {
+        HStack {
+            Text(text)
+                .font(.system(size: 20, weight: .medium))
+                .padding(.vertical, 12)
+            Spacer()
+        }
+        .padding(.horizontal, 16)
+        .frame(maxWidth: .infinity)
+        .background(
+            RoundedRectangle(cornerRadius: 15)
+                .fill(isSelected ? color.opacity(0.9) : color.opacity(0.6))
         )
     }
 }
 
-// MARK: - Fullscreen (same design as NeedFullScreenView)
-
+// MARK: - Fullscreen View With Phrases (bilingual)
 struct ActivityFullScreenView: View {
     let activity: Activity
     @Environment(\.dismiss) private var dismiss
+    @AppStorage("isArabic") private var isArabic = false
+    
+    @State private var selectedPhrase: String? = nil
+    @State private var customPhrase: String = ""
+    @State private var userPhrases: [String] = []
+    
+    private var displayName: String {
+        isArabic ? activity.arabicName : activity.englishName
+    }
+    
+    // ✅ Fixed phrases: specific per activity, natural EN / AR
+    private var defaultPhrases: [String] {
+        let key = activity.englishName.lowercased()
+        
+        if isArabic {
+            switch key {
+            case "story time":
+                return [
+                    "أريد وقت القصة",
+                    "لا أريد وقت القصة",
+                    "اقرأ معي"
+                ]
+            case "drawing":
+                return [
+                    "أريد أن أرسم",
+                    "لا أريد أن أرسم",
+                    "إرسم معي"
+                ]
+            case "dancing":
+                return [
+                    "أريد أن أرقص",
+                    "لا أريد أن أرقص",
+                    "إرقص معي"
+                ]
+            case "playtime":
+                return [
+                    "أريد أن ألعب",
+                    "لا أريد أن ألعب",
+                    "إلعب معي"
+                ]
+            case "outside":
+                return [
+                    "أريد أن أخرج للخارج",
+                    "لا أريد أن أخرج للخارج",
+                    "تعال معي إلى الخارج"
+                ]
+            case "quiet time":
+                return [
+                    "أريد وقت هادئ",
+                    "لا أريد وقت هادئ",
+                    "أحتاج مكان هادئ"
+                ]
+            default:
+                return [
+                    "أريد \(displayName)",
+                    "لا أريد \(displayName)",
+                    "أحب \(displayName)"
+                ]
+            }
+        } else {
+            switch key {
+            case "story time":
+                return [
+                    "I want story time",
+                    "I don't want story time",
+                    "Read with me"
+                ]
+            case "drawing":
+                return [
+                    "I want to draw",
+                    "I don't want to draw",
+                    "Draw with me"
+                ]
+            case "dancing":
+                return [
+                    "I want to dance",
+                    "I don't want to dance",
+                    "Dance with me"
+                ]
+            case "playtime":
+                return [
+                    "I want to play",
+                    "I don't want to play",
+                    "Play with me"
+                ]
+            case "outside":
+                return [
+                    "I want to go outside",
+                    "I don't want to go outside",
+                    "Come outside with me"
+                ]
+            case "quiet time":
+                return [
+                    "I want quiet time",
+                    "I don't want quiet time",
+                    "I need a calm place"
+                ]
+            default:
+                return [
+                    "I want \(activity.englishName)",
+                    "I don't want \(activity.englishName)",
+                    "I like \(activity.englishName)"
+                ]
+            }
+        }
+    }
     
     var body: some View {
         ZStack {
             activity.color.opacity(0.15)
                 .ignoresSafeArea()
             
-            VStack(spacing: 35) {
-                Spacer()
+            VStack(spacing: 25) {
                 
                 Text(activity.emoji)
-                    .font(.system(size: 130))
+                    .font(.system(size: 120))
                 
-                Text(activity.name)
-                    .font(.system(size: 42, weight: .bold, design: .rounded))
-                    .foregroundColor(.primary)
+                Text(displayName)
+                    .font(.system(size: 42, weight: .bold))
+                
+                // PHRASES
+                VStack(spacing: 12) {
+                    // Default phrases
+                    ForEach(defaultPhrases, id: \.self) { phrase in
+                        ActivityPhraseBubble(
+                            text: phrase,
+                            isSelected: selectedPhrase == phrase,
+                            color: activity.color
+                        )
+                        .onTapGesture { selectedPhrase = phrase }
+                    }
+                    
+                    // User-added phrases
+                    ForEach(userPhrases, id: \.self) { phrase in
+                        ActivityPhraseBubble(
+                            text: phrase,
+                            isSelected: selectedPhrase == phrase,
+                            color: activity.color
+                        )
+                        .onTapGesture { selectedPhrase = phrase }
+                    }
+                }
+                .padding(.horizontal)
                 
                 Spacer()
                 
-                Button("Close") {
+                // ADD PHRASE
+                VStack(spacing: 12) {
+                    HStack {
+                        TextField(isArabic ? "أضف جملة خاصة بك" : "Add your own phrase",
+                                  text: $customPhrase)
+                            .textFieldStyle(.roundedBorder)
+                        
+                        Button(isArabic ? "إضافة" : "Add") {
+                            let trimmed = customPhrase.trimmingCharacters(in: .whitespacesAndNewlines)
+                            if !trimmed.isEmpty {
+                                userPhrases.append(trimmed)
+                                customPhrase = ""
+                            }
+                        }
+                        .padding(.horizontal)
+                        .padding(.vertical, 10)
+                        .background(activity.color)
+                        .foregroundColor(.white)
+                        .cornerRadius(30)
+                    }
+                }
+                .padding(.horizontal)
+                
+                // CLOSE
+                Button(isArabic ? "إغلاق" : "Close") {
                     dismiss()
                 }
-                .font(.system(size: 22, weight: .bold, design: .rounded))
-                .padding(.horizontal, 50)
-                .padding(.vertical, 14)
+                .font(.system(size: 22, weight: .bold))
+                .padding(.horizontal, 40)
+                .padding(.vertical, 12)
                 .background(
-                    Capsule()
-                        .fill(activity.color)
+                    Capsule().fill(activity.color)
                 )
                 .foregroundColor(.white)
-                .padding(.bottom, 40)
+                .padding(.bottom, 20)
             }
             .padding()
         }
+        .environment(\.layoutDirection, isArabic ? .rightToLeft : .leftToRight)
     }
 }
 
+// MARK: - Preview
 #Preview {
     activitiespage()
 }
-
