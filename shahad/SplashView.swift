@@ -16,8 +16,8 @@ struct SplashView: View {
         
         ZStack {
             
-            if vm.goHome {
-                HomeView()
+            if vm.goHome {NavigationStack{
+                HomeView()}
             } else {
                 
                 Color(red: 0.98, green: 0.95, blue: 0.90)

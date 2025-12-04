@@ -24,7 +24,13 @@ struct OnboardingView: View {
     private let backgroundBeige  = Color(hex: "#FFF4D9")   // بيج خلفية
     
     var body: some View {
-        NavigationStack {
+        NavigationStack {NavigationLink(
+            destination: HomeView(),
+            isActive: $viewModel.shouldShowCategorySelection
+        ) {
+            EmptyView()
+        }
+        .hidden()
             ZStack {
                 
                 backgroundBeige.ignoresSafeArea()
