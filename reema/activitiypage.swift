@@ -1,5 +1,6 @@
 import SwiftUI
 
+// MARK: - Data Model
 struct Activity: Identifiable {
     let id = UUID()
     let name: String
@@ -7,15 +8,16 @@ struct Activity: Identifiable {
     let color: Color
 }
 
+// MARK: - Main Activities Page
 struct activitiespage: View {
     
     private let activities: [Activity] = [
-        Activity(name: "Story Time", emoji: "📖", color: .purple),
-        Activity(name: "Drawing", emoji: "🎨", color: .orange),
-        Activity(name: "Dancing", emoji: "💃", color: .pink),
-        Activity(name: "Playtime", emoji: "🧸", color: .blue),
-        Activity(name: "Outside", emoji: "🌳", color: .green),
-        Activity(name: "Quiet Time", emoji: "🤫", color: .teal)
+        Activity(name: "story time", emoji: "📖", color: .purple),
+        Activity(name: "drawing",    emoji: "🎨", color: .orange),
+        Activity(name: "dancing",    emoji: "💃", color: .pink),
+        Activity(name: "playtime",   emoji: "🧸", color: .blue),
+        Activity(name: "outside",    emoji: "🌳", color: .green),
+        Activity(name: "quiet time", emoji: "🤫", color: .teal)
     ]
     
     @State private var selectedActivity: Activity? = nil
@@ -23,8 +25,7 @@ struct activitiespage: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                
-                // 🌟 SAME CLEAN BACKGROUND
+                // Same clean background
                 Color(.systemGray6)
                     .ignoresSafeArea()
                 
@@ -49,8 +50,7 @@ struct activitiespage: View {
     }
 }
 
-// MARK: - Activity Card (same style as NeedBigCard)
-
+// MARK: - Activity Card
 struct ActivityBigCard: View {
     let activity: Activity
     
@@ -59,7 +59,7 @@ struct ActivityBigCard: View {
             Text(activity.emoji)
                 .font(.system(size: 60))
             
-            Text(activity.name)
+            Text(activity.name.capitalized)
                 .font(.system(size: 28, weight: .bold, design: .rounded))
                 .foregroundColor(.primary)
             
@@ -69,53 +69,130 @@ struct ActivityBigCard: View {
         .frame(maxWidth: .infinity)
         .background(
             RoundedRectangle(cornerRadius: 30)
-                .fill(activity.color.opacity(0.25))  // 🎨 Same soft pastel card style
+                .fill(activity.color.opacity(0.25))
         )
     }
 }
 
-// MARK: - Fullscreen (same design as NeedFullScreenView)
+// MARK: - Phrase Bubble (for Activities)
+struct ActivityPhraseBubble: View {
+    let text: String
+    let isSelected: Bool
+    let color: Color
+    
+    var body: some View {
+        HStack {
+            Text(text)
+                .font(.system(size: 20, weight: .medium))
+                .padding(.vertical, 12)
+            Spacer()
+        }
+        .padding(.horizontal, 16)
+        .frame(maxWidth: .infinity)
+        .background(
+            RoundedRectangle(cornerRadius: 15)
+                .fill(isSelected ? color.opacity(0.9) : color.opacity(0.6))
+        )
+    }
+}
 
+// MARK: - Fullscreen View With Phrases (same technique as FoodFullscreen)
 struct ActivityFullScreenView: View {
     let activity: Activity
     @Environment(\.dismiss) private var dismiss
+    
+    @State private var selectedPhrase: String? = nil
+    @State private var customPhrase: String = ""
+    @State private var userPhrases: [String] = []
+    
+    private var defaultPhrases: [String] {
+        [
+            "I like \(activity.name)",
+            "I don't like \(activity.name)",
+            "I want to do \(activity.name)"
+        ]
+    }
     
     var body: some View {
         ZStack {
             activity.color.opacity(0.15)
                 .ignoresSafeArea()
             
-            VStack(spacing: 35) {
-                Spacer()
+            VStack(spacing: 25) {
                 
                 Text(activity.emoji)
-                    .font(.system(size: 130))
+                    .font(.system(size: 120))
                 
-                Text(activity.name)
-                    .font(.system(size: 42, weight: .bold, design: .rounded))
-                    .foregroundColor(.primary)
+                Text(activity.name.capitalized)
+                    .font(.system(size: 42, weight: .bold))
+                
+                // PHRASES
+                VStack(spacing: 12) {
+                    // Default phrases
+                    ForEach(defaultPhrases, id: \.self) { phrase in
+                        ActivityPhraseBubble(
+                            text: phrase,
+                            isSelected: selectedPhrase == phrase,
+                            color: activity.color
+                        )
+                        .onTapGesture { selectedPhrase = phrase }
+                    }
+                    
+                    // User-added phrases
+                    ForEach(userPhrases, id: \.self) { phrase in
+                        ActivityPhraseBubble(
+                            text: phrase,
+                            isSelected: selectedPhrase == phrase,
+                            color: activity.color
+                        )
+                        .onTapGesture { selectedPhrase = phrase }
+                    }
+                }
+                .padding(.horizontal)
                 
                 Spacer()
                 
+                // ADD PHRASE
+                VStack(spacing: 12) {
+                    HStack {
+                        TextField("Add your own phrase", text: $customPhrase)
+                            .textFieldStyle(.roundedBorder)
+                        
+                        Button("Add") {
+                            let trimmed = customPhrase.trimmingCharacters(in: .whitespacesAndNewlines)
+                            if !trimmed.isEmpty {
+                                userPhrases.append(trimmed)
+                                customPhrase = ""
+                            }
+                        }
+                        .padding(.horizontal)
+                        .padding(.vertical, 10)
+                        .background(activity.color)
+                        .foregroundColor(.white)
+                        .cornerRadius(30)
+                    }
+                }
+                .padding(.horizontal)
+                
+                // CLOSE
                 Button("Close") {
                     dismiss()
                 }
-                .font(.system(size: 22, weight: .bold, design: .rounded))
-                .padding(.horizontal, 50)
-                .padding(.vertical, 14)
+                .font(.system(size: 22, weight: .bold))
+                .padding(.horizontal, 40)
+                .padding(.vertical, 12)
                 .background(
-                    Capsule()
-                        .fill(activity.color)
+                    Capsule().fill(activity.color)
                 )
                 .foregroundColor(.white)
-                .padding(.bottom, 40)
+                .padding(.bottom, 20)
             }
             .padding()
         }
     }
 }
 
+// MARK: - Preview
 #Preview {
     activitiespage()
 }
-
