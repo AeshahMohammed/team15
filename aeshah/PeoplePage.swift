@@ -31,11 +31,25 @@ struct PeoplePage: View {
             }
             .navigationTitle(viewModel.isArabic ? "الأشخاص" : "People")
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(viewModel.isArabic ? "A" : "ع") {
-                        viewModel.toggleLanguage()
-                    }
-                    .font(.title2.bold())
+                ToolbarItem(placement: .topBarTrailing) {  HStack {
+                    Button(action: {
+                        withAnimation {
+                            viewModel.isArabic.toggle()
+                        }
+                    }) {
+                        Text(viewModel.isArabic ? "A/ع" : "ع/A")
+                            .font(.headline)
+                            .foregroundColor(.black)
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 10)
+                            .background(Color(red: 0.82, green: 0.88, blue: 1.0))
+                            .cornerRadius(20)
+                          
+                    }.buttonStyle(PlainButtonStyle())
+                    
+                }
+               
+                
                 }
             }
             .sheet(item: $viewModel.selectedItem) { item in

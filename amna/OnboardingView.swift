@@ -103,13 +103,7 @@ struct OnboardingView: View {
             .environment(\.layoutDirection,
                          languageVM.current.isRTL ? .rightToLeft : .leftToRight)
             
-            // MARK: - Navigation
-            .navigationDestination(isPresented: $viewModel.shouldShowCategorySelection) {
-                if let user = viewModel.userProfile {
-                    let vm = CategorySelectionViewModel(user: user)
-                    CategorySelectionView(viewModel: vm)
-                }
-            }
+        
             
             // MARK: - Alert للأخطاء
             .onChange(of: viewModel.error) { newValue in

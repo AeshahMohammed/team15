@@ -36,26 +36,7 @@ struct activitiespage: View {
                     VStack(spacing: 22) {
                         
                         // Language toggle
-                        HStack {
-                            Button(action: {
-                                withAnimation {
-                                    isArabic.toggle()
-                                }
-                            }) {
-                                Text(isArabic ? "A/ع" : "ع/A")
-                                    .font(.headline)
-                                    .foregroundColor(.black)
-                                    .padding(.horizontal, 20)
-                                    .padding(.vertical, 10)
-                                    .background(Color(red: 0.82, green: 0.88, blue: 1.0))
-                                    .cornerRadius(20)
-                                    .shadow(color: .gray.opacity(0.4), radius: 4, x: 0, y: 2)
-                            }
-                            
-                            Spacer()
-                        }
-                        .padding(.horizontal)
-                        .padding(.top, 8)
+                        
                         
                         // Activity cards
                         ForEach(activities) { activity in
@@ -68,7 +49,26 @@ struct activitiespage: View {
                     .padding(.bottom)
                 }
             }
-            .navigationTitle(isArabic ? "الأنشطة" : "Activities")
+            .navigationTitle(isArabic ? "الأنشطة" : "Activities"
+            )
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        withAnimation {
+                            isArabic.toggle()
+                        }
+                    }) {
+                        Text(isArabic ? "A/ع" : "ع/A")
+                            .font(.headline)
+                            .foregroundColor(.black)
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 10)
+                            .background(Color(red: 0.82, green: 0.88, blue: 1.0))
+                            .cornerRadius(20)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
             .navigationBarTitleDisplayMode(.large)
             .sheet(item: $selectedActivity) { activity in
                 ActivityFullScreenView(activity: activity)
