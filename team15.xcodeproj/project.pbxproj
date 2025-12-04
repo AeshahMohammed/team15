@@ -6,14 +6,6 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		458641742EE05DA7005504FB /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458641732EE05DA5005504FB /* SplashView.swift */; };
-		458641782EE060B3005504FB /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458641772EE06046005504FB /* HomeView.swift */; };
-		4586417A2EE06227005504FB /* ColoredSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458641792EE06223005504FB /* ColoredSection.swift */; };
-		4586417C2EE06278005504FB /* CharacterMoodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4586417B2EE0623C005504FB /* CharacterMoodView.swift */; };
-		4586417E2EE062E4005504FB /* ProfilePicButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4586417D2EE062E1005504FB /* ProfilePicButton.swift */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXContainerItemProxy section */
 		45D1FEAE2ECF5396006AA815 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -32,11 +24,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		458641732EE05DA5005504FB /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
-		458641772EE06046005504FB /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
-		458641792EE06223005504FB /* ColoredSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColoredSection.swift; sourceTree = "<group>"; };
-		4586417B2EE0623C005504FB /* CharacterMoodView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterMoodView.swift; sourceTree = "<group>"; };
-		4586417D2EE062E1005504FB /* ProfilePicButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePicButton.swift; sourceTree = "<group>"; };
 		45D1FEA02ECF5395006AA815 /* team15.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = team15.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		45D1FEAD2ECF5396006AA815 /* team15Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = team15Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		45D1FEB72ECF5396006AA815 /* team15UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = team15UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -46,6 +33,26 @@
 		108968582EDC6DF300C4B0FB /* reema */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = reema;
+			sourceTree = "<group>";
+		};
+		45046CE92EE1291000357186 /* shahad */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = shahad;
+			sourceTree = "<group>";
+		};
+		45046CED2EE1299300357186 /* joudy */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = joudy;
+			sourceTree = "<group>";
+		};
+		45046CEF2EE129A600357186 /* aeshah */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = aeshah;
+			sourceTree = "<group>";
+		};
+		45046CF12EE129B500357186 /* amna */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = amna;
 			sourceTree = "<group>";
 		};
 		45D1FEA22ECF5395006AA815 /* team15 */ = {
@@ -97,12 +104,11 @@
 				45D1FEA22ECF5395006AA815 /* team15 */,
 				45D1FEB02ECF5396006AA815 /* team15Tests */,
 				45D1FEBA2ECF5396006AA815 /* team15UITests */,
+				45046CE92EE1291000357186 /* shahad */,
 				45D1FEA12ECF5395006AA815 /* Products */,
-				458641732EE05DA5005504FB /* SplashView.swift */,
-				458641772EE06046005504FB /* HomeView.swift */,
-				458641792EE06223005504FB /* ColoredSection.swift */,
-				4586417B2EE0623C005504FB /* CharacterMoodView.swift */,
-				4586417D2EE062E1005504FB /* ProfilePicButton.swift */,
+				45046CED2EE1299300357186 /* joudy */,
+				45046CEF2EE129A600357186 /* aeshah */,
+				45046CF12EE129B500357186 /* amna */,
 			);
 			sourceTree = "<group>";
 		};
@@ -133,6 +139,10 @@
 			);
 			fileSystemSynchronizedGroups = (
 				108968582EDC6DF300C4B0FB /* reema */,
+				45046CE92EE1291000357186 /* shahad */,
+				45046CED2EE1299300357186 /* joudy */,
+				45046CEF2EE129A600357186 /* aeshah */,
+				45046CF12EE129B500357186 /* amna */,
 				45D1FEA22ECF5395006AA815 /* team15 */,
 			);
 			name = team15;
@@ -261,11 +271,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				458641782EE060B3005504FB /* HomeView.swift in Sources */,
-				4586417C2EE06278005504FB /* CharacterMoodView.swift in Sources */,
-				4586417A2EE06227005504FB /* ColoredSection.swift in Sources */,
-				458641742EE05DA7005504FB /* SplashView.swift in Sources */,
-				4586417E2EE062E4005504FB /* ProfilePicButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

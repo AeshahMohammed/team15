@@ -1,9 +1,11 @@
 //
-//  ColoredSection.swift
+//  ColoredSection 3.swift
 //  team15
 //
-//  Created by aeshah mohammed alabdulkarim on 03/12/2025.
+//  Created by aeshah mohammed alabdulkarim on 04/12/2025.
 //
+
+
 import SwiftUI
 
 struct ColoredSection: View {
@@ -24,7 +26,6 @@ struct ColoredSection: View {
             }
             print("\(title) tapped")
         }) {
-            
             VStack(spacing: 10) {
                 
                 Text(title)

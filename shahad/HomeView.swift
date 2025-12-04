@@ -2,26 +2,18 @@
 //  HomeView.swift
 //  team15
 //
-//  Created by aeshah mohammed alabdulkarim on 03/12/2025.
+//  Created by aeshah mohammed alabdulkarim on 04/12/2025.
+//
+
 
 import SwiftUI
 
-@main
-struct taifApp: App {
-    var body: some Scene {
-        WindowGroup {
-            SplashView()
-        }
-    }
-}
-
-
-
 struct HomeView: View {
     
-    @AppStorage("isArabic") private var isArabic = false
+    @StateObject private var vm = HomeViewModel()
     
     var body: some View {
+        
         ZStack {
             
             Color.white
@@ -32,11 +24,9 @@ struct HomeView: View {
                 HStack {
                     
                     Button(action: {
-                        withAnimation {
-                            isArabic.toggle()
-                        }
+                        vm.toggleLanguage()
                     }) {
-                        Text(isArabic ? "A/ع" : "ع/A")
+                        Text(vm.isArabic ? "A/ع" : "ع/A")
                             .font(.headline)
                             .foregroundColor(.black)
                             .padding(.horizontal, 20)
@@ -54,7 +44,8 @@ struct HomeView: View {
                 }
                 .padding(.top, 20)
                 
-                Text(isArabic ? "اختر قسماً" : "pick a section")
+                
+                Text(vm.title(for: "pick a section", arabic: "اختر قسماً"))
                     .font(.system(size: 40, weight: .medium))
                     .foregroundColor(.black)
                     .padding(.top, 10)
@@ -62,12 +53,12 @@ struct HomeView: View {
                 HStack(spacing: 40) {
                     
                     ColoredSection(
-                        title: isArabic ? "الأنشطة" : "Activiteis",
+                        title: vm.title(for: "Activiteis", arabic: "الأنشطة"),
                         color: Color(red: 0.95, green: 0.97, blue: 0.78)
                     )
                     
                     ColoredSection(
-                        title: isArabic ? "الاحتياجات" : "Needs",
+                        title: vm.title(for: "Needs", arabic: "الاحتياجات"),
                         color: Color(red: 0.93, green: 0.78, blue: 0.75)
                     )
                 }
@@ -75,24 +66,24 @@ struct HomeView: View {
                 HStack(spacing: 40) {
                     
                     ColoredSection(
-                        title: isArabic ? "الأشخاص" : "People",
+                        title: vm.title(for: "People", arabic: "الأشخاص"),
                         color: Color(red: 0.98, green: 0.86, blue: 0.64)
                     )
                     
                     ColoredSection(
-                        title: isArabic ? "الطعام" : "Food",
+                        title: vm.title(for: "Food", arabic: "الطعام"),
                         color: Color(red: 0.96, green: 0.82, blue: 0.70)
                     )
                 }
                 
                 ColoredSection(
-                    title: isArabic ? "المشاعر" : "Feeling",
+                    title: vm.title(for: "Feeling", arabic: "المشاعر"),
                     color: Color(red: 0.88, green: 0.95, blue: 0.98)
                 )
                 
                 Spacer()
             }
         }
-        .environment(\.layoutDirection, isArabic ? .rightToLeft : .leftToRight)
+        .environment(\.layoutDirection, vm.isArabic ? .rightToLeft : .leftToRight)
     }
 }
