@@ -5,12 +5,13 @@
 //  Created by aeshah mohammed alabdulkarim on 04/12/2025.
 //
 
-
 import SwiftUI
-import Combine
+import Combine   //
 
 class HomeViewModel: ObservableObject {
+
     @AppStorage("isArabic") var isArabic = false
+    @Published var selectedSection: String? = nil
     
     func toggleLanguage() {
         withAnimation {

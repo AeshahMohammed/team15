@@ -6,46 +6,48 @@
 //
 
 
+
+
 import SwiftUI
 
 struct feelingspage: View {
     
+    @AppStorage("isArabic") private var isArabic = false
+    
     private let feelings: [Feeling] = [
-        Feeling(name: "happy", emoji: "😄", color: .yellow),
-        Feeling(name: "sad", emoji: "☹️", color: .blue),
-        Feeling(name: "scared", emoji: "😨", color: .purple),
-        Feeling(name: "angry", emoji: "😡", color: .red),
-        Feeling(name: "excited", emoji: "😆", color: .orange),
-        Feeling(name: "shy", emoji: "☺️", color: .pink),
-        Feeling(name: "tierd", emoji: "🫩", color: .teal),
-        Feeling(name: "proud", emoji: "😌", color: .blue),
-        Feeling(name: "bored", emoji: "🥱", color: .green),
-        Feeling(name: "surpraise", emoji: "😲", color: .mint)
+        Feeling(nameEnglish: "happy",    nameArabic: "سعيد",      emoji: "😄", color: .yellow),
+        Feeling(nameEnglish: "sad",      nameArabic: "حزين",      emoji: "☹️", color: .blue),
+        Feeling(nameEnglish: "scared",   nameArabic: "خائف",      emoji: "😨", color: .purple),
+        Feeling(nameEnglish: "angry",    nameArabic: "غاضب",      emoji: "😡", color: .red),
+        Feeling(nameEnglish: "excited",  nameArabic: "متحمس",     emoji: "😆", color: .orange),
+        Feeling(nameEnglish: "shy",      nameArabic: "خجول",      emoji: "☺️", color: .pink),
+        Feeling(nameEnglish: "tired",    nameArabic: "متعب",      emoji: "🫩", color: .teal),
+        Feeling(nameEnglish: "proud",    nameArabic: "فخور",      emoji: "😌", color: .blue),
+        Feeling(nameEnglish: "bored",    nameArabic: "ضجران",     emoji: "🥱", color: .green),
+        Feeling(nameEnglish: "surprised", nameArabic: "مندهش",   emoji: "😲", color: .mint)
     ]
     
     @State private var selectedFeeling: Feeling? = nil
     
     var body: some View {
+        
         NavigationStack {
-            ZStack {
-                Color(.systemGray6).ignoresSafeArea()
-                
-                ScrollView {
-                    VStack(spacing: 22) {
-                        ForEach(feelings) { feeling in
-                            FeelingBigCard(activity: feeling)
-                                .onTapGesture {
-                                    selectedFeeling = feeling
-                                }
-                        }
+            ScrollView {
+                VStack(spacing: 22) {
+                    ForEach(feelings) { feeling in
+                        FeelingBigCard(activity: feeling, isArabic: isArabic)
+                            .onTapGesture {
+                                selectedFeeling = feeling
+                            }
                     }
-                    .padding()
                 }
+                .padding()
             }
-            .navigationTitle("Feelings")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationTitle(isArabic ? "المشاعر" : "Feelings")
             .sheet(item: $selectedFeeling) { feeling in
-                FeelingFullScreenView(viewModel: FeelingViewModel(activity: feeling))
+                FeelingFullScreenView(
+                    viewModel: FeelingViewModel(activity: feeling, isArabic: isArabic)
+                )
             }
         }
     }

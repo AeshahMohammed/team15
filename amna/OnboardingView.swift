@@ -24,13 +24,7 @@ struct OnboardingView: View {
     private let backgroundBeige  = Color(hex: "#FFF4D9")   // بيج خلفية
     
     var body: some View {
-        NavigationStack {NavigationLink(
-            destination: HomeView(),
-            isActive: $viewModel.shouldShowCategorySelection
-        ) {
-            EmptyView()
-        }
-        .hidden()
+        NavigationStack {
             ZStack {
                 
                 backgroundBeige.ignoresSafeArea()
@@ -109,10 +103,13 @@ struct OnboardingView: View {
             .environment(\.layoutDirection,
                          languageVM.current.isRTL ? .rightToLeft : .leftToRight)
             
-        
+            // MARK: - التنقل المبرمج (بديل للـ NavigationLink deprecated)
+            .navigationDestination(isPresented: $viewModel.shouldShowCategorySelection) {
+                HomeView()
+            }
             
             // MARK: - Alert للأخطاء
-            .onChange(of: viewModel.error) { newValue in
+            .onChange(of: viewModel.error) { _, newValue in
                 isShowingError = newValue != nil
             }
             .alert(languageVM.errorTitle,

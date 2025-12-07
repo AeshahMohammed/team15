@@ -7,16 +7,16 @@
 
 
 import SwiftUI
-
 struct FeelingBigCard: View {
     let activity: Feeling
+    let isArabic: Bool
     
     var body: some View {
         HStack(spacing: 20) {
             Text(activity.emoji)
                 .font(.system(size: 60))
             
-            Text(activity.name.capitalized)
+            Text(isArabic ? activity.nameArabic : activity.nameEnglish)
                 .font(.system(size: 28, weight: .bold, design: .rounded))
                 .foregroundColor(.primary)
             

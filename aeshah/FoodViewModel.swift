@@ -46,9 +46,7 @@ class FoodViewModel: ObservableObject {
     func arabicName(for name: String) -> String {
         switch name {
             case "apple": return "تفاح"
-            case "hungry": return "جائع"
             case "orange": return "برتقال"
-            case "thirsty": return "عطشان"
             case "blueberry": return "توت أزرق"
             case "full": return "شبعان"
             case "strawberry": return "فراولة"

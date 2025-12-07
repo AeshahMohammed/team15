@@ -6,11 +6,13 @@
 //
 
 
+import Foundation
 import SwiftUI
 
 struct Feeling: Identifiable {
     let id = UUID()
-    let name: String
+    let nameEnglish: String
+    let nameArabic: String
     let emoji: String
     let color: Color
 }

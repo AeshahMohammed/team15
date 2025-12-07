@@ -4,14 +4,20 @@
 //
 //  Created by aeshah mohammed alabdulkarim on 04/12/2025.
 //
-
-
+import AVFoundation
 import SwiftUI
 
 struct FeelingFullScreenView: View {
     @ObservedObject var viewModel: FeelingViewModel
     @Environment(\.dismiss) private var dismiss
+    @State private var synthesizer = AVSpeechSynthesizer()
     
+    func speak(_ text: String) {
+           let utterance = AVSpeechUtterance(string: text)
+           utterance.voice = AVSpeechSynthesisVoice(language: viewModel.isArabic ? "ar-SA" : "en-US")
+           utterance.rate = 0.5
+           synthesizer.speak(utterance)
+       }
     var body: some View {
         ZStack {
             viewModel.activity.color.opacity(0.15).ignoresSafeArea()
@@ -22,7 +28,7 @@ struct FeelingFullScreenView: View {
                     Text(viewModel.activity.emoji)
                         .font(.system(size: 120))
                     
-                    Text(viewModel.activity.name.capitalized)
+                    Text(viewModel.isArabic ? viewModel.activity.nameArabic : viewModel.activity.nameEnglish.capitalized)
                         .font(.system(size: 42, weight: .bold))
                 }
                 
