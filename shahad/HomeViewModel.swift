@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
-import Combine   //
+import Combine
 
 class HomeViewModel: ObservableObject {
-
+    
     @AppStorage("isArabic") var isArabic = false
-    @Published var selectedSection: String? = nil
+    
+    // نقرأ اسم الطفل المخزون من Onboarding
+    @AppStorage("childName") var childName: String = ""
     
     func toggleLanguage() {
         withAnimation {
@@ -21,5 +23,17 @@ class HomeViewModel: ObservableObject {
     
     func title(for english: String, arabic: String) -> String {
         isArabic ? arabic : english
+    }
+    
+    /// جملة الترحيب التي تظهر في HomeView
+    var greetingText: String {
+        let trimmed = childName.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        // لو الاسم فاضي، ما نعرض كلمة الطفل
+        if trimmed.isEmpty {
+            return isArabic ? "مرحباً" : "Welcome"
+        } else {
+            return isArabic ? "مرحباً، \(trimmed)" : "Hi, \(trimmed)"
+        }
     }
 }
