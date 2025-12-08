@@ -12,28 +12,17 @@ struct HomeView: View {
     @StateObject private var vm = HomeViewModel()
     
     var body: some View {
-        
         NavigationStack {
             
             ZStack {
                 
-                Color.white.ignoresSafeArea()
+                Color.white
+                    .ignoresSafeArea()
                 
                 VStack(spacing: 40) {
                     
-                    // Header
+                    // MARK: - الشريط العلوي (زر اللغة + صورة الطفل)
                     HStack {
-                        
-                        // Back button (optional)
-                        Button(action: {
-                            // back action
-                        }) {
-                            Image(systemName: "arrow.backward")
-                                .font(.system(size: 22, weight: .bold))
-                                .foregroundColor(.black)
-                        }
-                        
-                        Spacer()
                         
                         Button(action: {
                             vm.toggleLanguage()
@@ -45,76 +34,90 @@ struct HomeView: View {
                                 .padding(.vertical, 12)
                                 .background(Color(red: 0.82, green: 0.88, blue: 1.0))
                                 .cornerRadius(20)
+                                .shadow(color: .gray.opacity(0.4),
+                                        radius: 4, x: 0, y: 2)
                         }
+                        .padding(.leading, 20)
+                        
+                        Spacer()
+                        
+                        ProfilePicButton()
+                            .padding(.trailing, 20)
                     }
-                    .padding(.horizontal)
-                    .padding(.top, 10)
+                    .padding(.top, 20)
                     
-                    
-                    // Title
-                    Text(vm.title(for: "Pick a section", arabic: "اختر قسماً"))
+                    // MARK: - العنوان + الترحيب
+                    Text(vm.title(for: "pick a section", arabic: "اختر قسماً"))
                         .font(.system(size: 40, weight: .medium))
                         .foregroundColor(.black)
                         .padding(.top, 10)
                     
+                    Text(vm.greetingText)
+                        .font(.system(size: 22, weight: .regular))
+                        .foregroundColor(.black)
+                        .padding(.top, 4)
                     
-                    // First row
+                    // MARK: - الصف الأول: الأنشطة + الاحتياجات
                     HStack(spacing: 40) {
                         
-                        ColoredSection(
-                            title: vm.title(for: "Activities", arabic: "الأنشطة"),
-                            color: Color(red: 0.95, green: 0.97, blue: 0.78),
-                            emoji: "🎨"
-                        ) {
-                            vm.selectedSection = "Activities"
+                        NavigationLink {
+                            activitiespage()   // شاشة الأنشطة
+                        } label: {
+                            ColoredSection(
+                                title: vm.title(for: "Activiteis", arabic: "الأنشطة"),
+                                color: Color(red: 0.95, green: 0.97, blue: 0.78)
+                            )
                         }
                         
-                        ColoredSection(
-                            title: vm.title(for: "Needs", arabic: "الاحتياجات"),
-                            color: Color(red: 0.93, green: 0.78, blue: 0.75),
-                            emoji: "🧺"
-                        ) {
-                            vm.selectedSection = "Needs"
+                        NavigationLink {
+                            NeedsPage()        // شاشة الاحتياجات
+                        } label: {
+                            ColoredSection(
+                                title: vm.title(for: "Needs", arabic: "الاحتياجات"),
+                                color: Color(red: 0.93, green: 0.78, blue: 0.75)
+                            )
                         }
                     }
                     
-                    
-                    // Second row
+                    // MARK: - الصف الثاني: الناس + الطعام
                     HStack(spacing: 40) {
                         
-                        ColoredSection(
-                            title: vm.title(for: "People", arabic: "الأشخاص"),
-                            color: Color(red: 0.98, green: 0.86, blue: 0.64),
-                            emoji: "🧒🏻"
-                        ) {
-                            vm.selectedSection = "People"
+                        NavigationLink {
+                            PeoplePage()       // شاشة الأشخاص
+                        } label: {
+                            ColoredSection(
+                                title: vm.title(for: "People", arabic: "الأشخاص"),
+                                color: Color(red: 0.98, green: 0.86, blue: 0.64)
+                            )
                         }
                         
-                        ColoredSection(
-                            title: vm.title(for: "Food", arabic: "الطعام"),
-                            color: Color(red: 0.96, green: 0.82, blue: 0.70),
-                            emoji: "🍎"
-                        ) {
-                            vm.selectedSection = "Food"
+                        NavigationLink {
+                            FoodPage()         // شاشة الطعام
+                        } label: {
+                            ColoredSection(
+                                title: vm.title(for: "Food", arabic: "الطعام"),
+                                color: Color(red: 0.96, green: 0.82, blue: 0.70)
+                            )
                         }
                     }
                     
-                    
-                    // Last section
-                    ColoredSection(
-                        title: vm.title(for: "Feelings", arabic: "المشاعر"),
-                        color: Color(red: 0.88, green: 0.95, blue: 0.98),
-                        emoji: "😊"
-                    ) {
-                        vm.selectedSection = "Feelings"
+                    // MARK: - الصف الثالث: المشاعر
+                    NavigationLink {
+                        feelingspage()        // شاشة المشاعر
+                    } label: {
+                        ColoredSection(
+                            title: vm.title(for: "Feeling", arabic: "المشاعر"),
+                            color: Color(red: 0.88, green: 0.95, blue: 0.98)
+                        )
                     }
                     
                     Spacer()
                 }
             }
-            .navigationDestination(item: $vm.selectedSection) { section in
-                SectionDetailView(sectionName: section)
-            }
+            .environment(\.layoutDirection,
+                         vm.isArabic ? .rightToLeft : .leftToRight)
+            // لا نريد زر رجوع من Home إلى Onboarding
+            .navigationBarBackButtonHidden(true)
         }
     }
 }
