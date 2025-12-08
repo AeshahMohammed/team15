@@ -49,8 +49,8 @@ class LanguageViewModel: ObservableObject {
     
     var signInTitle: String {
         switch current {
-        case .arabic:  return "تسجيل الدخول"
-        case .english: return "sign in"
+        case .arabic:  return "ابدأ"
+        case .english: return "Start"
         }
     }
     

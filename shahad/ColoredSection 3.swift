@@ -4,26 +4,15 @@
 //
 //  Created by aeshah mohammed alabdulkarim on 04/12/2025.
 //
+
 import SwiftUI
+
 struct ColoredSection: View {
-
-var title: String
-var color: Color
-var action: () -> Void = {}     // ✅ ADD ACTION
-
-@State private var pressed = false
-
-var body: some View {
     
-    Button(action: {
-        withAnimation(.spring(response: 0.25)) {
-            pressed = true
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
-            pressed = false
-        }
-        action()   // ✅ TRIGGER THE ACTION
-    }) {
+    var title: String
+    var color: Color
+    
+    var body: some View {
         VStack(spacing: 10) {
             
             Text(title)
@@ -33,11 +22,8 @@ var body: some View {
             RoundedRectangle(cornerRadius: 20)
                 .fill(color)
                 .frame(width: 140, height: 140)
-                .shadow(color: .gray.opacity(0.3), radius: 6, x: 0, y: 3)
-                .scaleEffect(pressed ? 0.93 : 1.0)
-                .opacity(pressed ? 0.85 : 1.0)
+                .shadow(color: .gray.opacity(0.3),
+                        radius: 6, x: 0, y: 3)
         }
     }
-    .buttonStyle(.plain)
-}
 }

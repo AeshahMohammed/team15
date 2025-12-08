@@ -14,40 +14,31 @@ struct OnboardingView: View {
     @StateObject private var viewModel = OnboardingViewModel()
     @EnvironmentObject var languageVM: LanguageViewModel
     
-    @State private var isShowingError = false
-    
     // MARK: - COLORS (HEX)
     private let fieldNameColor   = Color(hex: "#F7D7CF")   // وردي فاتح
-    private let fieldAgeColor    = Color(hex: "#FFF5BF")   // أصفر باهت
     private let buttonGreen      = Color(hex: "#BBF7BB")   // أخضر فاتح
-    private let buttonArbEng      = Color(hex: "#BCCFFB")   // أزرق
     private let backgroundBeige  = Color(hex: "#FFF4D9")   // بيج خلفية
     
     var body: some View {
-        NavigationStack {NavigationLink(
-            destination: HomeView(),
-            isActive: $viewModel.shouldShowCategorySelection
-        ) {
-            EmptyView()
-        }
-        .hidden()
+        NavigationStack {
             ZStack {
                 
                 backgroundBeige.ignoresSafeArea()
                 
                 VStack(spacing: 0) {
                     
-                    // MARK: - زر اللغة
+                    // MARK: - زر اللغة (نص أسود)
                     HStack {
                         Spacer()
                         Button {
                             languageVM.toggleLanguage()
                         } label: {
-                            Text(languageVM.toggleButtonTitle)
+                            Text("A/ع")
                                 .font(.system(size: 16, weight: .medium))
+                                .foregroundColor(.black)            // ← خط أسود
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 6)
-                                .background(buttonArbEng )
+                                .background(Color(hex: "#FFF5BF"))
                                 .cornerRadius(20)
                         }
                     }
@@ -57,21 +48,22 @@ struct OnboardingView: View {
                     // MARK: - العنوان
                     Text(languageVM.onboardingTitle)
                         .font(.system(size: 34, weight: .bold))
+                        .foregroundColor(.black)                  // ← خط أسود
                         .multilineTextAlignment(.center)
                         .lineSpacing(6)
                         .lineLimit(2)
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(.top, 40)
                     
-                    // مسافة بين العنوان والحقول
+                    // مسافة بين العنوان وحقل الاسم
                     Spacer().frame(height: 36)
                     
-                    // MARK: - الحقول
+                    // MARK: - حقل الاسم فقط (بدون عمر)
                     VStack(spacing: 16) {
                         if viewModel.isExpandedFields {
-                            expandedFields
+                            expandedNameField
                         } else {
-                            compactFields
+                            compactNameField
                         }
                     }
                     .animation(.spring(response: 0.45,
@@ -79,15 +71,16 @@ struct OnboardingView: View {
                                value: viewModel.isExpandedFields)
                     .padding(.horizontal, 30)
                     
-                    // مسافة بين الحقول والزر
+                    // مسافة بين الحقل والزر
                     Spacer().frame(height: 28)
                     
-                    // MARK: - زر الدخول
+                    // MARK: - زر ابدأ / Start (بدل تسجيل الدخول)
                     Button {
-                        viewModel.didTapLogin()
+                        viewModel.didTapStart()
                     } label: {
-                        Text(languageVM.signInTitle)
+                        Text(languageVM.signInTitle)              // الآن تعطي: ابدأ / Start
                             .font(.system(size: 18, weight: .semibold))
+                            .foregroundColor(.black)              // ← خط أسود
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 14)
                             .background(buttonGreen)
@@ -98,7 +91,7 @@ struct OnboardingView: View {
                     // مسافة قبل الشخصية
                     Spacer().frame(height: 24)
                     
-                    // MARK: - الشخصية
+                    // MARK: - الشخصية (تتحرك حسب كتابة الاسم)
                     characterArea
                         .frame(height: 260)
                     
@@ -109,58 +102,40 @@ struct OnboardingView: View {
             .environment(\.layoutDirection,
                          languageVM.current.isRTL ? .rightToLeft : .leftToRight)
             
-        
-            
-            // MARK: - Alert للأخطاء
-            .onChange(of: viewModel.error) { newValue in
-                isShowingError = newValue != nil
-            }
-            .alert(languageVM.errorTitle,
-                   isPresented: $isShowingError) {
-                Button(languageVM.okTitle, role: .cancel) {
-                    viewModel.resetError()
+            // MARK: - الانتقال لصفحة الأقسام
+            .navigationDestination(isPresented: $viewModel.shouldShowCategorySelection) {
+                if let user = viewModel.userProfile {
+                   
+                    HomeView()
+                   // HomeView(viewModel: vm)
+                } else {
+                  
+                    HomeView()
+                  // HomeView(viewModel: vm)
                 }
-            } message: {
-                Text(languageVM.errorMessage(for: viewModel.error))
             }
         }
     }
     
-    // MARK: - FIELDS
+    // MARK: - Name Fields
     
-    private var compactFields: some View {
-        HStack(spacing: 14) {
-            pillTextField(
-                placeholder: languageVM.namePlaceholder(isCompact: true),
-                text: $viewModel.firstName,
-                bgColor: fieldNameColor
-            )
-            
-            pillTextField(
-                placeholder: languageVM.agePlaceholder,
-                text: $viewModel.age,
-                bgColor: fieldAgeColor
-            )
-            .frame(width: 90)
-        }
+    // قبل الكتابة: placeholder قصير
+    private var compactNameField: some View {
+        pillTextField(
+            placeholder: languageVM.namePlaceholder(isCompact: true),
+            text: $viewModel.firstName,
+            bgColor: fieldNameColor
+        )
     }
     
-    private var expandedFields: some View {
-        HStack(spacing: 14) {
-            pillTextField(
-                placeholder: languageVM.namePlaceholder(isCompact: false),
-                text: $viewModel.firstName,
-                bgColor: fieldNameColor
-            )
-            .frame(maxWidth: .infinity)
-            
-            pillTextField(
-                placeholder: languageVM.agePlaceholder,
-                text: $viewModel.age,
-                bgColor: fieldAgeColor
-            )
-            .frame(width: 90)
-        }
+    // بعد الكتابة: placeholder أطول + تمدد الحقل
+    private var expandedNameField: some View {
+        pillTextField(
+            placeholder: languageVM.namePlaceholder(isCompact: false),
+            text: $viewModel.firstName,
+            bgColor: fieldNameColor
+        )
+        .frame(maxWidth: .infinity)
     }
     
     private func pillTextField(
@@ -175,10 +150,10 @@ struct OnboardingView: View {
             .cornerRadius(22)
             .multilineTextAlignment(.center)
             .font(.system(size: 16))
+            .foregroundColor(.black)      // ← النص اللي يكتبه المستخدم أسود
     }
     
     // MARK: - منطقة الشخصية مع الحركة
-    
     private var characterArea: some View {
         ZStack(
             alignment: viewModel.isExpandedFields ? .bottomTrailing : .center
