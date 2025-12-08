@@ -9,7 +9,6 @@
 
 import SwiftUI
 
-@main
 struct uthom1App: App {
     
     
