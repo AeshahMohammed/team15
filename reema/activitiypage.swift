@@ -14,6 +14,7 @@ struct Activity: Identifiable {
 struct activitiespage: View {
     
     @AppStorage("isArabic") private var isArabic = false
+    @Environment(\.dismiss) private var dismiss          // ⬅️ زر الرجوع
     @State private var selectedActivity: Activity? = nil
     
     private let activities: [Activity] = [
@@ -44,6 +45,21 @@ struct activitiespage: View {
             }
             .navigationTitle(isArabic ? "الأنشطة" : "Activities")
             .toolbar {
+                
+                // زر الرجوع إلى HomeView
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        HStack {
+                            Image(systemName: "chevron.backward")
+                            Text(isArabic ? "الرئيسية" : "Home")
+                        }
+                        .foregroundColor(.black)
+                    }
+                }
+                
+                // زر تغيير اللغة (نفسه)
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: { withAnimation { isArabic.toggle() } }) {
                         Text(isArabic ? "A/ع" : "ع/A")
