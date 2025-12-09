@@ -28,14 +28,20 @@ struct NeedsPage: View {
     
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: 22) {
-                    ForEach(needs) { need in
-                        NeedBigCard(need: need, isArabic: isArabic)
-                            .onTapGesture { selectedNeed = need }
+            ZStack {
+                // Same background feel as Activities page
+                Color(.systemGray6).ignoresSafeArea()
+                
+                ScrollView {
+                    VStack(spacing: 22) {
+                        ForEach(needs) { need in
+                            NeedBigCard(need: need, isArabic: isArabic)
+                                .onTapGesture { selectedNeed = need }
+                        }
                     }
+                    // Match Activities page bottom spacing
+                    .padding(.bottom)
                 }
-                .padding()
             }
             .navigationTitle(isArabic ? "الاحتياجات" : "Needs")
             .navigationBarTitleDisplayMode(.large)
@@ -223,6 +229,10 @@ struct NeedFullScreenView: View {
                 .background(Capsule().fill(need.color))
                 .foregroundColor(.white)
                 .padding(.bottom, 20)
-                
-            }}}}
+            }
+            .padding() // match fullscreen padding style
+        }
+    }
+}
+
 #Preview { NeedsPage() }
