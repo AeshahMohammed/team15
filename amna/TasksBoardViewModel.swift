@@ -12,22 +12,26 @@
 // TasksBoardViewModel.swift
 // team15
 
+//
+//  TasksBoardViewModel.swift
+//  team15
+//
+
 import SwiftUI
 import Combine
 
 class TasksBoardViewModel: ObservableObject {
     
-    // إعدادات عامة
     @AppStorage("isArabic") var isArabic: Bool = false
     @AppStorage("childName") var childName: String = "نجد"
     
-    // قائمة المهام المتاحة (فوق – للسحب)
+    // المهام المتاحة للسحب من الأعلى
     @Published var availableTasks: [TaskTemplate] = [
         TaskTemplate(key: "prayer",         nameArabic: "الصلاة",         nameEnglish: "Prayer",          emoji: "🕌"),
         TaskTemplate(key: "brushTeeth",     nameArabic: "تفريش الأسنان",  nameEnglish: "Brush teeth",     emoji: "🪥"),
         TaskTemplate(key: "washHands",      nameArabic: "غسل اليدين",     nameEnglish: "Wash hands",      emoji: "🧼"),
-        TaskTemplate(key: "breakfast",      nameArabic: "الإفطار",        nameEnglish: "Breakfast",       emoji: "🍳"),
-        TaskTemplate(key: "school",         nameArabic: "الذهاب للمدرسة", nameEnglish: "Go to school",    emoji: "🎒"),
+        TaskTemplate(key: "breakfast",      nameArabic: "الفطور",         nameEnglish: "Breakfast",       emoji: "🍳"),
+        TaskTemplate(key: "school",         nameArabic: "المدرسة",        nameEnglish: "School",          emoji: "🎒"),
         TaskTemplate(key: "homework",       nameArabic: "حل الواجب",      nameEnglish: "Homework",        emoji: "📚"),
         TaskTemplate(key: "study",          nameArabic: "المذاكرة",       nameEnglish: "Study",           emoji: "📖"),
         TaskTemplate(key: "play",           nameArabic: "اللعب",          nameEnglish: "Play",            emoji: "🧸"),
@@ -42,64 +46,82 @@ class TasksBoardViewModel: ObservableObject {
         TaskTemplate(key: "sleep",          nameArabic: "النوم",          nameEnglish: "Sleep",           emoji: "😴")
     ]
     
-    /// المهام المعيَّنة لكل وقت في اليوم
-    @Published var schedule: [TaskTimeSlot: [AssignedTask]] = [:]
+    // المهام الموزعة على الجدول: لكل وقت قائمة مهام
+    @Published private(set) var schedule: [TaskTimeSlot: [TaskAssignment]] = [:]
     
-    /// أوقات البدء والانتهاء لكل فترة
-    @Published var startTimes: [TaskTimeSlot: String] = [:]
-    @Published var endTimes:   [TaskTimeSlot: String] = [:]
-    
-    /// للمساعدة في السحب والإفلات
+    // للمساعدة في السحب والإفلات
     @Published var draggingTemplate: TaskTemplate? = nil
     
     init() {
-        // تهيئة القواميس بقيم فارغة
         TaskTimeSlot.allCases.forEach { slot in
             schedule[slot] = []
-            startTimes[slot] = ""
-            endTimes[slot] = ""
         }
     }
     
-    // MARK: - ترجمة نصوص بسيطة
-    func title(for english: String, arabic: String) -> String {
-        isArabic ? arabic : english
+    // نص حسب اللغة
+    func text(_ en: String, _ ar: String) -> String {
+        isArabic ? ar : en
     }
     
-    // MARK: - المنطق
+    // إرجاع قائمة المهام لوقت معيّن
+    func tasks(for slot: TaskTimeSlot) -> [TaskAssignment] {
+        schedule[slot] ?? []
+    }
     
+    // تعيين مهمة جديدة لوقت معيّن
     func assign(_ template: TaskTemplate, to slot: TaskTimeSlot) {
         var list = schedule[slot] ?? []
-        list.append(AssignedTask(template: template))
+        let assignment = TaskAssignment(
+            slot: slot,
+            template: template,
+            startTime: "",
+            endTime: "",
+            isDone: false
+        )
+        list.append(assignment)
         schedule[slot] = list
     }
     
-    func remove(task: AssignedTask, from slot: TaskTimeSlot) {
-        guard var list = schedule[slot] else { return }
-        list.removeAll { $0.id == task.id }
-        schedule[slot] = list
-    }
-    
-    func toggleDone(slot: TaskTimeSlot, task: AssignedTask) {
-        guard var list = schedule[slot] else { return }
-        if let index = list.firstIndex(where: { $0.id == task.id }) {
+    // تبديل إنجاز مهمة
+    func toggleDone(_ assignment: TaskAssignment) {
+        guard var list = schedule[assignment.slot] else { return }
+        if let index = list.firstIndex(where: { $0.id == assignment.id }) {
             list[index].isDone.toggle()
-            schedule[slot] = list
+            schedule[assignment.slot] = list
         }
     }
     
-    /// نسبة الإنجاز اليومية (0 - 1)
-    var dailyProgress: Double {
-        let allTasks = schedule.values.flatMap { $0 }
-        guard !allTasks.isEmpty else { return 0 }
-        let done = allTasks.filter { $0.isDone }.count
-        return Double(done) / Double(allTasks.count)
+    // حذف مهمة
+    func remove(_ assignment: TaskAssignment) {
+        guard var list = schedule[assignment.slot] else { return }
+        list.removeAll { $0.id == assignment.id }
+        schedule[assignment.slot] = list
     }
     
-    /// ملصق "أحسنت" لو أنجز كل المهام
+    // تحديث وقت البداية والنهاية لمهمة
+    func updateTimes(for assignmentID: UUID, start: String, end: String) {
+        for slot in TaskTimeSlot.allCases {
+            guard var list = schedule[slot] else { continue }
+            if let index = list.firstIndex(where: { $0.id == assignmentID }) {
+                list[index].startTime = start
+                list[index].endTime = end
+                schedule[slot] = list
+                return
+            }
+        }
+    }
+    
+    // نسبة الإنجاز
+    var dailyProgress: Double {
+        let all = schedule.values.flatMap { $0 }
+        guard !all.isEmpty else { return 0 }
+        let doneCount = all.filter { $0.isDone }.count
+        return Double(doneCount) / Double(all.count)
+    }
+    
     var showWellDoneSticker: Bool {
-        let allTasks = schedule.values.flatMap { $0 }
-        guard !allTasks.isEmpty else { return false }
-        return allTasks.allSatisfy { $0.isDone }
+        let all = schedule.values.flatMap { $0 }
+        guard !all.isEmpty else { return false }
+        return all.allSatisfy { $0.isDone }
     }
 }

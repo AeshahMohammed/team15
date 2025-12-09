@@ -7,9 +7,14 @@
 // TaskModels.swift
 // team15
 
+//
+//  TaskModels.swift
+//  team15
+//
+
 import SwiftUI
 
-/// فترات اليوم (أعمدة الجدول)
+// MARK: - فترات اليوم (أعمدة الجدول)
 enum TaskTimeSlot: String, CaseIterable, Identifiable {
     case fajr
     case dhuhr
@@ -39,10 +44,10 @@ enum TaskTimeSlot: String, CaseIterable, Identifiable {
         }
     }
     
-    /// أيقونة صغيرة أعلى العمود – استخدمنا الكعبة للفجر مثل ما طلبتِ
+    /// أيقونة صغيرة بجانب اسم الوقت (الكعبة للفجر كما طلبتِ)
     var icon: String {
         switch self {
-        case .fajr:     return "🕋"
+        case .fajr:     return "morning_sun.fill"
         case .dhuhr:    return "☀️"
         case .asr:      return "🌤"
         case .maghrib:  return "🌇"
@@ -51,7 +56,7 @@ enum TaskTimeSlot: String, CaseIterable, Identifiable {
     }
 }
 
-/// قالب مهمة (المهام الجاهزة اللي فوق على اليسار)
+// MARK: - قالب مهمة (من القائمة العلوية)
 struct TaskTemplate: Identifiable, Hashable {
     let id = UUID()
     let key: String
@@ -60,9 +65,12 @@ struct TaskTemplate: Identifiable, Hashable {
     let emoji: String
 }
 
-/// مهمة موضوعة في الجدول (بعد السحب والإفلات)
-struct AssignedTask: Identifiable, Hashable {
+// MARK: - مهمة موضوعة في الجدول
+struct TaskAssignment: Identifiable, Hashable {
     let id = UUID()
-    let template: TaskTemplate
-    var isDone: Bool = false
+    var slot: TaskTimeSlot
+    var template: TaskTemplate
+    var startTime: String   // وقت البدء
+    var endTime: String     // وقت الانتهاء
+    var isDone: Bool
 }
