@@ -12,14 +12,13 @@ import SwiftUI
 @main
 struct uthom1App: App {
     
-    
-    @StateObject private var languageVM = LanguageViewModel()
-    
-    
-    var body: some Scene {
-        WindowGroup {
-            OnboardingView()
-                          .environmentObject(languageVM)
+    // لغة التطبيق – تُستخدم في كل الشاشات
+        @StateObject private var languageVM = LanguageViewModel()
+        
+        var body: some Scene {
+            WindowGroup {
+                SplashView()                 // ⬅️ نبدأ بسلاش فيو
+                    .environmentObject(languageVM)
+            }
         }
     }
-}

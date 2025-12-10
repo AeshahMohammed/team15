@@ -7,12 +7,19 @@
 
 
 
+//
+//  LanguageViewModel.swift
+//  team15
+//
 
 import Foundation
 import Combine
 
 class LanguageViewModel: ObservableObject {
     @Published var current: AppLanguage = .english
+    
+    // ✅ جديد: علشان صوت الترحيب يشتغل مرة واحدة في كل جلسة
+    @Published var hasPlayedSplashGreeting: Bool = false
     
     // تبديل اللغة
     func toggleLanguage() {
