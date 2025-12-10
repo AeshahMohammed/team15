@@ -14,48 +14,38 @@ struct Need: Identifiable {
 struct NeedsPage: View {
     
     @AppStorage("isArabic") private var isArabic = false
-    @Environment(\.dismiss) private var dismiss      // زر الرجوع
     
     private let needs: [Need] = [
         Need(englishName: "Food",     arabicName: "الأكل",        emoji: "🍽️", color: .orange),
-        Need(englishName: "Thirsty",  arabicName: "عطشان",        emoji: "🥤", color: .blue),
-        Need(englishName: "Bathroom", arabicName: "الحمّام",      emoji: "🚻", color: .teal),
-        Need(englishName: "Tired",    arabicName: "متعب",         emoji: "😴", color: .purple),
+        Need(englishName: "Thirsty",  arabicName: "عطشان",       emoji: "🥤", color: .blue),
+        Need(englishName: "Bathroom", arabicName: "الحمّام",     emoji: "🚻", color: .teal),
+        Need(englishName: "Tired",    arabicName: "متعب",        emoji: "😴", color: .purple),
         Need(englishName: "Help",     arabicName: "أحتاج مساعدة", emoji: "🙋‍♀️", color: .pink),
-        Need(englishName: "Sick",     arabicName: "مريض",         emoji: "🤒", color: .green)
+        Need(englishName: "Sick",     arabicName: "مريض",        emoji: "🤒", color: .green)
     ]
     
     @State private var selectedNeed: Need? = nil
     
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: 22) {
-                    ForEach(needs) { need in
-                        NeedBigCard(need: need, isArabic: isArabic)
-                            .onTapGesture { selectedNeed = need }
+            ZStack {
+                // Same background feel as Activities page
+                Color(.systemGray6).ignoresSafeArea()
+                
+                ScrollView {
+                    VStack(spacing: 22) {
+                        ForEach(needs) { need in
+                            NeedBigCard(need: need, isArabic: isArabic)
+                                .onTapGesture { selectedNeed = need }
+                        }
                     }
+                    // Match Activities page bottom spacing
+                    .padding(.bottom)
                 }
-                .padding()
             }
             .navigationTitle(isArabic ? "الاحتياجات" : "Needs")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
-                
-                // زر الرجوع إلى HomeView
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        HStack {
-                            Image(systemName: "chevron.backward")
-                            Text(isArabic ? "الرئيسية" : "Home")
-                        }
-                        .foregroundColor(.black)
-                    }
-                }
-                
-                // زر تغيير اللغة
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         withAnimation { isArabic.toggle() }
@@ -137,8 +127,7 @@ struct NeedFullScreenView: View {
     @State private var selectedPhrase: String? = nil
     @State private var customPhrase: String = ""
     @State private var userPhrases: [String] = []
-    
-    private let synthesizer = AVSpeechSynthesizer()
+    @State private var synthesizer = AVSpeechSynthesizer()
     
     private var displayName: String {
         isArabic ? need.arabicName : need.englishName
@@ -149,23 +138,23 @@ struct NeedFullScreenView: View {
         
         if isArabic {
             switch key {
-            case "food":     return ["أنا جائع", "أريد أن آكل", "لا أريد أن آكل الآن"]
-            case "thirsty":  return ["أنا عطشان", "أريد أن أشرب", "لا أريد أن أشرب الآن"]
+            case "food": return ["أنا جائع", "أريد أن آكل", "لا أريد أن آكل الآن"]
+            case "thirsty": return ["أنا عطشان", "أريد أن أشرب", "لا أريد أن أشرب الآن"]
             case "bathroom": return ["أحتاج الذهاب إلى الحمام", "لا أحتاج الحمام الآن", "من فضلك خذني إلى الحمام"]
-            case "tired":    return ["أنا متعب", "أريد أن أرتاح", "لا أريد أن أرتاح الآن"]
-            case "help":     return ["أحتاج مساعدة", "لا أحتاج مساعدة الآن", "من فضلك ساعدني"]
-            case "sick":     return ["أشعر أنني مريض", "بطني تؤلمني", "أحتاج طبيب"]
-            default:         return ["أحتاج \(displayName)", "لا أحتاج \(displayName)", "أريد \(displayName)"]
+            case "tired": return ["أنا متعب", "أريد أن أرتاح", "لا أريد أن أرتاح الآن"]
+            case "help": return ["أحتاج مساعدة", "لا أحتاج مساعدة الآن", "من فضلك ساعدني"]
+            case "sick": return ["أشعر أنني مريض", "بطني تؤلمني", "أحتاج طبيب"]
+            default: return ["أحتاج \(displayName)", "لا أحتاج \(displayName)", "أريد \(displayName)"]
             }
         } else {
             switch key {
-            case "food":     return ["I am hungry", "I want food", "I don't want food"]
-            case "thirsty":  return ["I am thirsty", "I want a drink", "I don't want a drink"]
+            case "food": return ["I am hungry", "I want food", "I don't want food"]
+            case "thirsty": return ["I am thirsty", "I want a drink", "I don't want a drink"]
             case "bathroom": return ["I need the bathroom", "I don't need the bathroom", "Please take me to the bathroom"]
-            case "tired":    return ["I am tired", "I want to rest", "I don't want to rest"]
-            case "help":     return ["I need help", "I don't need help", "Please help me"]
-            case "sick":     return ["I feel sick", "My body hurts", "I need a doctor"]
-            default:         return ["I need \(need.englishName)", "I don't need \(need.englishName)", "I want \(need.englishName)"]
+            case "tired": return ["I am tired", "I want to rest", "I don't want to rest"]
+            case "help": return ["I need help", "I don't need help", "Please help me"]
+            case "sick": return ["I feel sick", "My body hurts", "I need a doctor"]
+            default: return ["I need \(need.englishName)", "I don't need \(need.englishName)", "I want \(need.englishName)"]
             }
         }
     }
@@ -213,8 +202,7 @@ struct NeedFullScreenView: View {
                 
                 // Add custom phrase
                 HStack {
-                    TextField(isArabic ? "أضف جملة خاصة بك" : "Add your own phrase",
-                              text: $customPhrase)
+                    TextField(isArabic ? "أضف جملة خاصة بك" : "Add your own phrase", text: $customPhrase)
                         .textFieldStyle(.roundedBorder)
                     
                     Button(isArabic ? "إضافة" : "Add") {
@@ -242,11 +230,9 @@ struct NeedFullScreenView: View {
                 .foregroundColor(.white)
                 .padding(.bottom, 20)
             }
-            .padding()
+            .padding() // match fullscreen padding style
         }
     }
 }
 
-#Preview {
-    NeedsPage()
-}
+#Preview { NeedsPage() }
