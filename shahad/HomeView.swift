@@ -1,9 +1,3 @@
-//
-//  HomeView.swift
-//  team15
-//
-//  Created by aeshah mohammed alabdulkarim on 04/12/2025.
-//
 import SwiftUI
 
 struct HomeView: View {
@@ -22,7 +16,7 @@ struct HomeView: View {
             
             VStack(spacing: 24) {
                 
-                // MARK: - الهيدر (اللغة + صورة الطفل) *بدون زر رجوع*
+                // MARK: - Header (Language + Profile)
                 HStack {
                     Button(action: {
                         vm.toggleLanguage()
@@ -44,7 +38,7 @@ struct HomeView: View {
                 .padding(.horizontal, 20)
                 .padding(.top, 20)
                 
-                // MARK: - العنوان + الترحيب
+                // MARK: - Title + Greeting
                 VStack(spacing: 6) {
                     Text(vm.title(for: "pick a section", arabic: "اختر قسماً"))
                         .font(.system(size: 40, weight: .medium))
@@ -52,24 +46,26 @@ struct HomeView: View {
                         .multilineTextAlignment(.center)
                     
                     Text(vm.greetingText)
-                        .font(.system(size: 22, weight: .regular))
+                        .font(.system(size: 22))
                         .foregroundColor(.black)
                 }
                 .padding(.top, 8)
                 
-                // MARK: - الأقسام
+                // MARK: - Sections
                 VStack(spacing: 24) {
                     
                     HStack(spacing: 40) {
                         ColoredSection(
                             title: vm.title(for: "Activiteis", arabic: "الأنشطة"),
-                            color: Color(red: 0.95, green: 0.97, blue: 0.78)
+                            color: Color(red: 0.85, green: 0.92, blue: 1.0),
+                            emoji: "🎮"
                         )
                         .onTapGesture { openActivitiesPage = true }
 
                         ColoredSection(
                             title: vm.title(for: "Needs", arabic: "الاحتياجات"),
-                            color: Color(red: 0.93, green: 0.78, blue: 0.75)
+                            color: Color(red: 1.0, green: 0.89, blue: 0.89),
+                            emoji: "🧩"
                         )
                         .onTapGesture { openNeedsPage = true }
                     }
@@ -77,24 +73,26 @@ struct HomeView: View {
                     HStack(spacing: 40) {
                         ColoredSection(
                             title: vm.title(for: "People", arabic: "الأشخاص"),
-                            color: Color(red: 0.98, green: 0.86, blue: 0.64)
+                            color: Color(red: 1.0, green: 0.95, blue: 0.80),
+                            emoji: "🧑‍🤝‍🧑"
                         )
                         .onTapGesture { openPeoplePage = true }
 
                         ColoredSection(
                             title: vm.title(for: "Food", arabic: "الطعام"),
-                            color: Color(red: 0.96, green: 0.82, blue: 0.70)
+                            color: Color(red: 1.0, green: 0.96, blue: 0.80),
+                            emoji: "🍽️"
                         )
                         .onTapGesture { openFoodPage = true }
                     }
                     
-                    // قسم المشاعر
                     Button {
                         showFeelings = true
                     } label: {
                         ColoredSection(
                             title: vm.title(for: "Feeling", arabic: "المشاعر"),
-                            color: Color(red: 0.88, green: 0.95, blue: 0.98)
+                            color: Color(red: 0.85, green: 0.97, blue: 0.90),
+                            emoji: "😊"
                         )
                     }
                 }
@@ -103,7 +101,7 @@ struct HomeView: View {
                 Spacer()
             }
         }
-        // MARK: - فتح الشاشات
+        // MARK: - Page Navigation
         .fullScreenCover(isPresented: $showFeelings) { feelingspage() }
         .fullScreenCover(isPresented: $openPeoplePage) { PeoplePage() }
         .fullScreenCover(isPresented: $openNeedsPage) { NeedsPage() }
@@ -112,6 +110,7 @@ struct HomeView: View {
         .environment(\.layoutDirection, vm.isArabic ? .rightToLeft : .leftToRight)
     }
 }
+
 #Preview {
     HomeView()
 }

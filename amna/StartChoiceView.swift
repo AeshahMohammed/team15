@@ -1,10 +1,3 @@
-//
-//  StartChoiceView.swift
-//  team15
-//
-//  Created by Amna  on 17/06/1447 AH.
-//
-
 import SwiftUI
 
 struct StartChoiceView: View {
@@ -24,7 +17,7 @@ struct StartChoiceView: View {
             VStack(spacing: 28) {
 
                 // MARK: - زر الرجوع حسب اللغة
-               HStack {
+                HStack {
                     if languageVM.current.isRTL {
                         Spacer()
                         Button(action: { dismiss() }) {
@@ -51,11 +44,11 @@ struct StartChoiceView: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 24)
 
-                // MARK: - صورة الشخصية (كبيرة + بدون إطار)
+                // MARK: - صورة الشخصية
                 Image("taif")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 260, height: 260)   // حجم كبير
+                    .frame(width: 260, height: 260)
                     .padding(.top, 4)
 
                 Spacer().frame(height: 6)
@@ -74,10 +67,9 @@ struct StartChoiceView: View {
                 }
                 .padding(.horizontal, 40)
 
-                // MARK: - زر "جدول المهام"
+                // MARK: - زر "جدول المهام" -> opens calendarpage
                 NavigationLink {
-                    TasksBoardView()
-                        .environmentObject(languageVM)
+                    calendarpage()          // 👈 your autistic-friendly calendar
                 } label: {
                     Text(tasksTitle)
                         .font(.system(size: 20, weight: .semibold))

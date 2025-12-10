@@ -1,29 +1,33 @@
-//
-//  ColoredSection 3.swift
-//  team15
-//
-//  Created by aeshah mohammed alabdulkarim on 04/12/2025.
-//
-
 import SwiftUI
 
 struct ColoredSection: View {
     
     var title: String
     var color: Color
+    var emoji: String
     
     var body: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: 12) {
             
+            // Title
             Text(title)
-                .font(.headline)
+                .font(.system(size: 20, weight: .semibold, design: .rounded))
                 .foregroundColor(.black)
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
+                .minimumScaleFactor(0.8)
             
-            RoundedRectangle(cornerRadius: 20)
-                .fill(color)
-                .frame(width: 140, height: 140)
-                .shadow(color: .gray.opacity(0.3),
-                        radius: 6, x: 0, y: 3)
+            // Box with emoji
+            ZStack {
+                RoundedRectangle(cornerRadius: 22)
+                    .fill(color.opacity(0.9))
+                    .frame(width: 150, height: 150)     // bigger + nicer
+                    .shadow(color: .gray.opacity(0.25),
+                            radius: 5, x: 0, y: 3)
+                
+                Text(emoji)
+                    .font(.system(size: 65))            // bigger emoji
+            }
         }
     }
 }
