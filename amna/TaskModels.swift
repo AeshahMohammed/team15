@@ -4,26 +4,91 @@
 //
 //  Created by Amna  on 18/06/1447 AH.
 //
-// TaskModels.swift
-// team15
-
 //
 //  TaskModels.swift
 //  team15
 //
 
-import SwiftUI
+//
+//
+//  ScheduleModels.swift
+//  team15
 
-// MARK: - فترات اليوم (أعمدة الجدول)
-enum TaskTimeSlot: String, CaseIterable, Identifiable {
+import Foundation
+
+// MARK: - أيام الأسبوع
+
+enum ScheduleDay: String, CaseIterable, Identifiable {
+    case saturday
+    case sunday
+    case monday
+    case tuesday
+    case wednesday
+    case thursday
+    case friday
+
+    var id: String { rawValue }
+
+    func title(isArabic: Bool) -> String {
+        if isArabic {
+            switch self {
+            case .saturday:   return "السبت"
+            case .sunday:     return "الأحد"
+            case .monday:     return "الإثنين"
+            case .tuesday:    return "الثلاثاء"
+            case .wednesday:  return "الأربعاء"
+            case .thursday:   return "الخميس"
+            case .friday:     return "الجمعة"
+            }
+        } else {
+            switch self {
+            case .saturday:   return "Saturday"
+            case .sunday:     return "Sunday"
+            case .monday:     return "Monday"
+            case .tuesday:    return "Tuesday"
+            case .wednesday:  return "Wednesday"
+            case .thursday:   return "Thursday"
+            case .friday:     return "Friday"
+            }
+        }
+    }
+
+    func shortLabel(isArabic: Bool) -> String {
+        if isArabic {
+            switch self {
+            case .saturday:   return "س"
+            case .sunday:     return "ح"
+            case .monday:     return "ن"
+            case .tuesday:    return "ث"
+            case .wednesday:  return "ر"
+            case .thursday:   return "خ"
+            case .friday:     return "ج"
+            }
+        } else {
+            switch self {
+            case .saturday:   return "Sa"
+            case .sunday:     return "Su"
+            case .monday:     return "Mo"
+            case .tuesday:    return "Tu"
+            case .wednesday:  return "We"
+            case .thursday:   return "Th"
+            case .friday:     return "Fr"
+            }
+        }
+    }
+}
+
+// MARK: - أوقات اليوم (على حسب الصلوات)
+
+enum ScheduleTimeSlot: String, CaseIterable, Identifiable {
     case fajr
     case dhuhr
     case asr
     case maghrib
     case isha
-    
+
     var id: String { rawValue }
-    
+
     func title(isArabic: Bool) -> String {
         if isArabic {
             switch self {
@@ -43,34 +108,62 @@ enum TaskTimeSlot: String, CaseIterable, Identifiable {
             }
         }
     }
-    
-    /// أيقونة صغيرة بجانب اسم الوقت (الكعبة للفجر كما طلبتِ)
+
+    /// الإيموجي الخاص بالوقت – فجر قمر دائري، ظهر/عصر شمس، مغرب غيوم، عشاء قمر
     var icon: String {
         switch self {
-        case .fajr:     return "morning_sun.fill"
-        case .dhuhr:    return "☀️"
-        case .asr:      return "🌤"
-        case .maghrib:  return "🌇"
-        case .isha:     return "🌙"
+        case .fajr:     return "🌕"      // فجر – قمر دائري
+        case .dhuhr:    return "☀️"      // ظهر
+        case .asr:      return "🌤️"     // عصر
+        case .maghrib:  return "🌥️"     // مغرب
+        case .isha:     return "🌙"      // عشاء
         }
     }
 }
 
-// MARK: - قالب مهمة (من القائمة العلوية)
-struct TaskTemplate: Identifiable, Hashable {
-    let id = UUID()
-    let key: String
-    let nameArabic: String
-    let nameEnglish: String
-    let emoji: String
+// MARK: - قالب مهمة (قائمة المهام)
+
+struct ScheduleTaskTemplate: Identifiable, Equatable {
+    let id: UUID
+    var nameArabic: String
+    var nameEnglish: String
+    var emoji: String
+
+    init(id: UUID = UUID(),
+         nameArabic: String,
+         nameEnglish: String,
+         emoji: String) {
+        self.id = id
+        self.nameArabic = nameArabic
+        self.nameEnglish = nameEnglish
+        self.emoji = emoji
+    }
 }
 
-// MARK: - مهمة موضوعة في الجدول
-struct TaskAssignment: Identifiable, Hashable {
-    let id = UUID()
-    var slot: TaskTimeSlot
-    var template: TaskTemplate
-    var startTime: String   // وقت البدء
-    var endTime: String     // وقت الانتهاء
+// MARK: - مهمة معيّنة داخل الجدول
+
+struct ScheduleAssignment: Identifiable, Equatable {
+    let id: UUID
+    var day: ScheduleDay
+    var slot: ScheduleTimeSlot
+    var template: ScheduleTaskTemplate
+    var startTime: String
+    var endTime: String
     var isDone: Bool
+
+    init(id: UUID = UUID(),
+         day: ScheduleDay,
+         slot: ScheduleTimeSlot,
+         template: ScheduleTaskTemplate,
+         startTime: String = "",
+         endTime: String = "",
+         isDone: Bool = false) {
+        self.id = id
+        self.day = day
+        self.slot = slot
+        self.template = template
+        self.startTime = startTime
+        self.endTime = endTime
+        self.isDone = isDone
+    }
 }
