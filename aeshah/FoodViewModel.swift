@@ -18,9 +18,7 @@ class FoodViewModel: ObservableObject {
 
     let foodItems: [FoodItem] = [
         FoodItem(name: "apple", emoji: "🍎", color: .red),
-        FoodItem(name: "hungry", emoji: "😋", color: .orange),
         FoodItem(name: "orange", emoji: "🍊", color: .orange.opacity(0.7)),
-        FoodItem(name: "thirsty", emoji: "🥤", color: .pink),
         FoodItem(name: "blueberry", emoji: "🫐", color: .blue),
         FoodItem(name: "full", emoji: "😌", color: .green),
         FoodItem(name: "strawberry", emoji: "🍓", color: .red.opacity(0.7)),
