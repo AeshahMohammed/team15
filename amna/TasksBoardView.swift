@@ -16,7 +16,6 @@
 //
 
 //
-
 //  TasksBoardView.swift
 //  team15
 
@@ -28,10 +27,15 @@ struct TasksBoardView: View {
     @StateObject private var vm = ScheduleBoardViewModel()
 
     @State private var showAddTaskSheet = false
+    @State private var showManageTasks = false
+    @State private var showAchievements = false
 
     @State private var editingAssignment: ScheduleAssignment? = nil
     @State private var tempStartTime: String = ""
     @State private var tempEndTime: String = ""
+
+    @State private var lastProgress: Double = 0
+    @State private var showCongratsOverlay = false
 
     var body: some View {
         NavigationStack {
@@ -43,6 +47,7 @@ struct TasksBoardView: View {
 
                         header
                         progressCard
+                        achievementsButton
                         daySelector
                         taskPalette
                         timeSlotsSection
@@ -50,6 +55,10 @@ struct TasksBoardView: View {
                     .padding(.horizontal, 16)
                     .padding(.top, 12)
                     .padding(.bottom, 24)
+                }
+
+                if showCongratsOverlay {
+                    congratsOverlay
                 }
             }
             .environment(\.layoutDirection, vm.isArabic ? .rightToLeft : .leftToRight)
@@ -60,6 +69,9 @@ struct TasksBoardView: View {
                 vm.addCustomTemplate(nameArabic: ar, nameEnglish: en, emoji: emoji)
             }
         }
+        .sheet(isPresented: $showManageTasks) {
+            TaskManagementView(vm: vm)
+        }
         .sheet(item: $editingAssignment) { assignment in
             TimeEditSheet(
                 isArabic: vm.isArabic,
@@ -69,6 +81,25 @@ struct TasksBoardView: View {
             ) { start, end in
                 vm.updateTime(for: assignment, start: start, end: end)
             }
+        }
+        .sheet(isPresented: $showAchievements) {
+            AchievementsView()
+        }
+        .onAppear {
+            lastProgress = vm.todayProgress
+        }
+        .onChange(of: vm.todayProgress) { newValue in
+            if lastProgress < 1.0 && newValue == 1.0 {
+                withAnimation(.spring()) {
+                    showCongratsOverlay = true
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                    withAnimation(.easeOut) {
+                        showCongratsOverlay = false
+                    }
+                }
+            }
+            lastProgress = newValue
         }
     }
 
@@ -163,6 +194,33 @@ struct TasksBoardView: View {
         return "😴"
     }
 
+    // MARK: - زر شاشة الإنجازات
+
+    private var achievementsButton: some View {
+        HStack {
+            Spacer()
+            Button {
+                showAchievements = true
+            } label: {
+                HStack(spacing: 6) {
+                    Image(systemName: "star.circle.fill")
+                        .font(.system(size: 18))
+                    Text(vm.text("إنجازاتي", "My achievements"))
+                        .font(.system(size: 14, weight: .semibold))
+                }
+                .foregroundColor(.black)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 8)
+                .background(
+                    Capsule()
+                        .fill(Color.white.opacity(0.95))
+                )
+                .shadow(color: Color.black.opacity(0.08), radius: 2, x: 0, y: 1)
+            }
+            .buttonStyle(.plain)
+        }
+    }
+
     // MARK: - Day selector
 
     private var daySelector: some View {
@@ -177,7 +235,7 @@ struct TasksBoardView: View {
                         .background(
                             Circle().fill(
                                 isSelected
-                                ? Color(red: 0.24, green: 0.52, blue: 0.90)
+                                ? Color(red: 0.24, green: 0.52, blue: 0.90) // اليوم المختار أزرق
                                 : Color.white.opacity(0.9)
                             )
                         )
@@ -205,6 +263,20 @@ struct TasksBoardView: View {
                     .foregroundColor(.black)
 
                 Spacer()
+
+                Button {
+                    showManageTasks = true
+                } label: {
+                    Image(systemName: "slider.horizontal.3")
+                        .font(.system(size: 16))
+                        .foregroundColor(.black)
+                        .padding(8)
+                        .background(
+                            Circle()
+                                .fill(Color.white.opacity(0.9))
+                        )
+                }
+                .buttonStyle(.plain)
 
                 Button {
                     showAddTaskSheet = true
@@ -269,6 +341,39 @@ struct TasksBoardView: View {
         }
         .padding(.top, 4)
     }
+
+    // MARK: - تهنئة عند إكمال اليوم
+
+    private var congratsOverlay: some View {
+        ZStack {
+            Color.black.opacity(0.35)
+                .ignoresSafeArea()
+
+            VStack(spacing: 16) {
+                Image("taifpic")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 140)
+
+                Text(vm.text("أحسنت! أنجزت مهام اليوم 🎉", "Great job! You finished today’s tasks 🎉"))
+                    .font(.system(size: 18, weight: .bold))
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(.black)
+
+                Text(vm.text("يمكنك الآن أخذ استراحة أو اللعب قليلاً 🌟", "You can now take a break or play a bit 🌟"))
+                    .font(.system(size: 14))
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(.black.opacity(0.8))
+            }
+            .padding(24)
+            .background(
+                RoundedRectangle(cornerRadius: 28)
+                    .fill(Color(red: 0.99, green: 0.97, blue: 0.90))
+            )
+            .shadow(radius: 8)
+            .padding(.horizontal, 40)
+        }
+    }
 }
 
 // MARK: - TimeSlotRow
@@ -284,7 +389,10 @@ private struct TimeSlotRow: View {
     @Binding var tempEndTime: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        let tasks = vm.tasks(for: day, slot: slot)
+        let hasTasks = !tasks.isEmpty
+
+        return VStack(alignment: .leading, spacing: 8) {
 
             HStack(spacing: 8) {
                 Text(slot.icon)
@@ -314,7 +422,6 @@ private struct TimeSlotRow: View {
                         return true
                     }
 
-                let tasks = vm.tasks(for: day, slot: slot)
                 ForEach(tasks) { assignment in
                     taskRow(for: assignment)
                 }
@@ -324,7 +431,11 @@ private struct TimeSlotRow: View {
         .padding(10)
         .background(
             RoundedRectangle(cornerRadius: 22)
-                .fill(Color.white.opacity(0.9))
+                .fill(
+                    hasTasks
+                    ? slot.baseColor.opacity(0.9)
+                    : slot.baseColor.opacity(0.5)
+                )
         )
     }
 
@@ -382,7 +493,7 @@ private struct TimeSlotRow: View {
         .padding(8)
         .background(
             RoundedRectangle(cornerRadius: 16)
-                .fill(Color(red: 0.90, green: 0.95, blue: 1.0))
+                .fill(Color.white.opacity(0.92))
         )
     }
 }
@@ -459,6 +570,134 @@ private struct TimeEditSheet: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(isArabic ? "حفظ" : "Save") {
                         onSave(start, end)
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
+}
+
+// MARK: - شاشة إدارة المهام (للأهل)
+
+private struct TaskManagementView: View {
+
+    @ObservedObject var vm: ScheduleBoardViewModel
+    @Environment(\.dismiss) private var dismiss
+
+    @State private var editingTemplate: ScheduleTaskTemplate? = nil
+
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                Color(red: 0.98, green: 0.95, blue: 0.90).ignoresSafeArea()
+
+                List {
+                    Section(header: Text(vm.text("قائمة المهام", "Task list"))) {
+                        ForEach(vm.templates) { template in
+                            HStack(spacing: 10) {
+                                Text(template.emoji)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(vm.isArabic ? template.nameArabic : template.nameEnglish)
+                                        .font(.system(size: 15, weight: .semibold))
+                                    Text(vm.isArabic ? template.nameEnglish : template.nameArabic)
+                                        .font(.system(size: 12))
+                                        .foregroundColor(.gray)
+                                }
+                                Spacer()
+                                Button {
+                                    editingTemplate = template
+                                } label: {
+                                    Image(systemName: "pencil")
+                                        .font(.system(size: 14))
+                                }
+                                .buttonStyle(.plain)
+                                .padding(.trailing, 4)
+
+                                Button {
+                                    vm.deleteTemplate(template)
+                                } label: {
+                                    Image(systemName: "trash")
+                                        .foregroundColor(.red)
+                                        .font(.system(size: 14))
+                                }
+                                .buttonStyle(.plain)
+                            }
+                            .padding(.vertical, 4)
+                        }
+                    }
+                }
+                .scrollContentBackground(.hidden)
+            }
+            .environment(\.layoutDirection, vm.isArabic ? .rightToLeft : .leftToRight)
+            .navigationTitle(vm.text("إدارة المهام", "Manage tasks"))
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: vm.isArabic ? "chevron.backward" : "chevron.forward")
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundColor(.black)
+                    }
+                }
+            }
+            .sheet(item: $editingTemplate) { template in
+                TemplateEditSheet(
+                    isArabic: vm.isArabic,
+                    template: template
+                ) { ar, en, emoji in
+                    vm.updateTemplate(template, nameArabic: ar, nameEnglish: en, emoji: emoji)
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Sheet: تعديل بيانات مهمة (اسم/إيموجي)
+
+private struct TemplateEditSheet: View {
+
+    let isArabic: Bool
+    let template: ScheduleTaskTemplate
+    var onSave: (String, String, String) -> Void
+
+    @Environment(\.dismiss) private var dismiss
+
+    @State private var nameAr: String = ""
+    @State private var nameEn: String = ""
+    @State private var emoji: String = ""
+
+    init(isArabic: Bool,
+         template: ScheduleTaskTemplate,
+         onSave: @escaping (String, String, String) -> Void) {
+        self.isArabic = isArabic
+        self.template = template
+        self.onSave = onSave
+        _nameAr = State(initialValue: template.nameArabic)
+        _nameEn = State(initialValue: template.nameEnglish)
+        _emoji  = State(initialValue: template.emoji)
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    TextField(isArabic ? "اسم المهمة بالعربية" : "Task name (Arabic)", text: $nameAr)
+                    TextField(isArabic ? "اسم المهمة بالإنجليزي" : "Task name (English)", text: $nameEn)
+                    TextField(isArabic ? "الإيموجي" : "Emoji", text: $emoji)
+                }
+            }
+            .navigationTitle(isArabic ? "تعديل مهمة" : "Edit task")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(isArabic ? "إلغاء" : "Cancel") {
+                        dismiss()
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(isArabic ? "حفظ" : "Save") {
+                        onSave(nameAr, nameEn, emoji)
                         dismiss()
                     }
                 }

@@ -13,8 +13,11 @@
 //
 //  ScheduleModels.swift
 //  team15
+//  ScheduleModels.swift
+//  team15
 
 import Foundation
+import SwiftUI
 
 // MARK: - أيام الأسبوع
 
@@ -112,16 +115,32 @@ enum ScheduleTimeSlot: String, CaseIterable, Identifiable {
     /// الإيموجي الخاص بالوقت – فجر قمر دائري، ظهر/عصر شمس، مغرب غيوم، عشاء قمر
     var icon: String {
         switch self {
-        case .fajr:     return "🌕"      // فجر – قمر دائري
-        case .dhuhr:    return "☀️"      // ظهر
-        case .asr:      return "🌤️"     // عصر
-        case .maghrib:  return "🌥️"     // مغرب
-        case .isha:     return "🌙"      // عشاء
+        case .fajr:     return "🌕"    // فجر – قمر دائري
+        case .dhuhr:    return "☀️"    // ظهر
+        case .asr:      return "🌤️"   // عصر
+        case .maghrib:  return "🌥️"   // مغرب
+        case .isha:     return "🌙"    // عشاء
+        }
+    }
+
+    /// لون الخلفية الأساسي لكل خانة وقت (نستغله عشان يكون فيه فرق بين الأوقات)
+    var baseColor: Color {
+        switch self {
+        case .fajr:
+            return Color(red: 0.86, green: 0.90, blue: 1.0)   // أزرق فاتح فيه هدوء
+        case .dhuhr:
+            return Color(red: 0.99, green: 0.96, blue: 0.82)   // أصفر فاتح دافي
+        case .asr:
+            return Color(red: 0.99, green: 0.91, blue: 0.82)   // برتقالي فاتح
+        case .maghrib:
+            return Color(red: 0.97, green: 0.88, blue: 0.90)   // وردي هادئ
+        case .isha:
+            return Color(red: 0.88, green: 0.90, blue: 0.98)   // بنفسجي/أزرق ليل هادي
         }
     }
 }
 
-// MARK: - قالب مهمة (قائمة المهام)
+// MARK: - قالب مهمة (في قائمة المهام)
 
 struct ScheduleTaskTemplate: Identifiable, Equatable {
     let id: UUID

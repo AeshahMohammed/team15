@@ -159,7 +159,7 @@ struct OnboardingView: View {
         ZStack(
             alignment: viewModel.isExpandedFields ? .bottomTrailing : .center
         ) {
-            Image(viewModel.isExpandedFields ? "taif1_s" : "taif") // عدلي الأسماء حسب الصور عندكم
+            Image(viewModel.isExpandedFields ? "taif1_s" : "taif") // عدلي الأسماء حسب الصور 
                 .resizable()
                 .scaledToFit()
                 .frame(width: viewModel.isExpandedFields ? 240 : 260)
