@@ -18,12 +18,12 @@ struct activitiespage: View {
     @State private var selectedActivity: Activity? = nil
     
     private let activities: [Activity] = [
-        Activity(englishName: "story time", arabicName: "وقت القصة",   emoji: "📖", color: .purple),
-        Activity(englishName: "drawing",    arabicName: "الرسم",       emoji: "🎨", color: .orange),
-        Activity(englishName: "dancing",    arabicName: "الرقص",       emoji: "💃", color: .pink),
-        Activity(englishName: "playtime",   arabicName: "وقت اللعب",   emoji: "🧸", color: .blue),
-        Activity(englishName: "outside",    arabicName: "الخارج",      emoji: "🌳", color: .green),
-        Activity(englishName: "quiet time", arabicName: "وقت هادئ",    emoji: "🤫", color: .teal)
+        Activity(englishName: "story time", arabicName: "وقت القصة",   emoji: "📖", color: Color(red: 0.30, green: 0.65, blue: 0.70)),
+        Activity(englishName: "drawing",    arabicName: "الرسم",       emoji: "🎨", color: Color(red: 0.30, green: 0.65, blue: 0.70)),
+        Activity(englishName: "dancing",    arabicName: "الرقص",       emoji: "💃", color: Color(red: 0.30, green: 0.65, blue: 0.70)),
+        Activity(englishName: "playtime",   arabicName: "وقت اللعب",   emoji: "🧸", color: Color(red: 0.30, green: 0.65, blue: 0.70)),
+        Activity(englishName: "outside",    arabicName: "الخارج",      emoji: "🌳", color: Color(red: 0.30, green: 0.65, blue: 0.70)),
+        Activity(englishName: "quiet time", arabicName: "وقت هادئ",    emoji: "🤫", color: Color(red: 0.30, green: 0.65, blue: 0.70))
     ]
     
     var body: some View {
@@ -59,19 +59,7 @@ struct activitiespage: View {
                     }
                 }
                 
-                // زر تغيير اللغة (نفسه)
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { withAnimation { isArabic.toggle() } }) {
-                        Text(isArabic ? "A/ع" : "ع/A")
-                            .font(.headline)
-                            .foregroundColor(.black)
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 10)
-                            .background(Color(red: 0.82, green: 0.88, blue: 1.0))
-                            .cornerRadius(20)
-                    }
-                    .buttonStyle(.plain)
-                }
+               //button language
             }
             .navigationBarTitleDisplayMode(.large)
             .sheet(item: $selectedActivity) { activity in
@@ -120,7 +108,7 @@ struct ActivityPhraseBubble: View {
         }
         .padding(.horizontal, 16)
         .frame(maxWidth: .infinity)
-        .background(RoundedRectangle(cornerRadius: 15)
+        .background(RoundedRectangle(cornerRadius: 20)
                         .fill(isSelected ? color.opacity(0.9) : color.opacity(0.6)))
     }
 }
@@ -206,6 +194,7 @@ struct ActivityFullScreenView: View {
                     TextField(isArabic ? "أضف جملة خاصة بك" : "Add your own phrase",
                               text: $customPhrase)
                         .textFieldStyle(.roundedBorder)
+                        .cornerRadius(12)
                     
                     Button(isArabic ? "إضافة" : "Add") {
                         let trimmed = customPhrase.trimmingCharacters(in: .whitespacesAndNewlines)

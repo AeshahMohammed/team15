@@ -16,25 +16,25 @@ final class PeopleViewModel: ObservableObject {
 
     // People list (moved from view)
     @Published var peopleItems: [PeopleItem] = [
-        PeopleItem(name: "mom", emoji: "👩‍🦰", color: .pink),
-        PeopleItem(name: "dad", emoji: "👨‍🦱", color: .blue),
-        PeopleItem(name: "sister", emoji: "👧", color: .purple),
-        PeopleItem(name: "brother", emoji: "👦", color: .green),
-        PeopleItem(name: "maid", emoji: "👩‍🍳", color: .cyan),
-        PeopleItem(name: "driver", emoji: "🧑‍✈️", color: .orange),
+        PeopleItem(name: "mom", emoji: "👩‍🦰", color: Color(red: 1.0, green: 0.85, blue: 0.60)),
+        PeopleItem(name: "dad", emoji: "👨‍🦱", color: Color(red: 1.0, green: 0.85, blue: 0.60)),
+        PeopleItem(name: "sister", emoji: "👧", color: Color(red: 1.0, green: 0.85, blue: 0.60)),
+        PeopleItem(name: "brother", emoji: "👦", color: Color(red: 1.0, green: 0.85, blue: 0.60)),
+        PeopleItem(name: "maid", emoji: "👩‍🍳", color: Color(red: 1.0, green: 0.85, blue: 0.60)),
+        PeopleItem(name: "driver", emoji: "🧑‍✈️", color: Color(red: 1.0, green: 0.85, blue: 0.60)),
 
-        PeopleItem(name: "grandpa", emoji: "👴", color: .brown),
-        PeopleItem(name: "grandma", emoji: "👵", color: .mint),
-        PeopleItem(name: "uncle", emoji: "🧔", color: .indigo),
-        PeopleItem(name: "auntie", emoji: "👩‍🦱", color: .pink),
-        PeopleItem(name: "cousin", emoji: "🧑", color: .teal),
-        PeopleItem(name: "teacher", emoji: "👩‍🏫", color: .yellow),
-        PeopleItem(name: "doctor", emoji: "👨‍⚕️", color: .red),
-        PeopleItem(name: "therapist", emoji: "👩‍⚕️", color: .indigo),
+        PeopleItem(name: "grandpa", emoji: "👴", color: Color(red: 1.0, green: 0.85, blue: 0.60)),
+        PeopleItem(name: "grandma", emoji: "👵", color: Color(red: 1.0, green: 0.85, blue: 0.60)),
+        PeopleItem(name: "uncle", emoji: "🧔", color: Color(red: 1.0, green: 0.85, blue: 0.60)),
+        PeopleItem(name: "auntie", emoji: "👩‍🦱", color: Color(red: 1.0, green: 0.85, blue: 0.60)),
+        PeopleItem(name: "cousin", emoji: "🧑", color: Color(red: 1.0, green: 0.85, blue: 0.60)),
+        PeopleItem(name: "teacher", emoji: "👩‍🏫", color: Color(red: 1.0, green: 0.85, blue: 0.60)),
+        PeopleItem(name: "doctor", emoji: "👨‍⚕️", color: Color(red: 1.0, green: 0.85, blue: 0.60)),
+        PeopleItem(name: "therapist", emoji: "👩‍⚕️", color: Color(red: 1.0, green: 0.85, blue: 0.60)),
 
-        PeopleItem(name: "friend", emoji: "🧑‍🤝‍🧑", color: .purple.opacity(0.7)),
-        PeopleItem(name: "classmates", emoji: "👨‍👩‍👧‍👦", color: .orange.opacity(0.7)),
-        PeopleItem(name: "neighbor", emoji: "🏘️", color: .green.opacity(0.7))
+        PeopleItem(name: "friend", emoji: "🧑‍🤝‍🧑", color: Color(red: 1.0, green: 0.85, blue: 0.60)),
+        PeopleItem(name: "classmates", emoji: "👨‍👩‍👧‍👦", color: Color(red: 1.0, green: 0.85, blue: 0.60)),
+        PeopleItem(name: "neighbor", emoji: "🏘️", color: Color(red: 1.0, green: 0.85, blue: 0.60))
     ]
 
     // MARK: - Arabic lookup moved here

@@ -16,12 +16,12 @@ struct NeedsPage: View {
     @AppStorage("isArabic") private var isArabic = false
     
     private let needs: [Need] = [
-        Need(englishName: "Food",     arabicName: "الأكل",        emoji: "🍽️", color: .orange),
-        Need(englishName: "Thirsty",  arabicName: "عطشان",       emoji: "🥤", color: .blue),
-        Need(englishName: "Bathroom", arabicName: "الحمّام",     emoji: "🚻", color: .teal),
-        Need(englishName: "Tired",    arabicName: "متعب",        emoji: "😴", color: .purple),
-        Need(englishName: "Help",     arabicName: "أحتاج مساعدة", emoji: "🙋‍♀️", color: .pink),
-        Need(englishName: "Sick",     arabicName: "مريض",        emoji: "🤒", color: .green)
+        Need(englishName: "Food",     arabicName: "الأكل",        emoji: "🍽️", color: Color(red: 1.0, green: 0.80, blue: 0.90)),
+        Need(englishName: "Thirsty",  arabicName: "عطشان",       emoji: "🥤", color: Color(red: 1.0, green: 0.80, blue: 0.90)),
+        Need(englishName: "Bathroom", arabicName: "الحمّام",     emoji: "🚻", color: Color(red: 1.0, green: 0.80, blue: 0.90)),
+        Need(englishName: "Tired",    arabicName: "متعب",        emoji: "😴", color: Color(red: 1.0, green: 0.80, blue: 0.90)),
+        Need(englishName: "Help",     arabicName: "أحتاج مساعدة", emoji: "🙋‍♀️", color: Color(red: 1.0, green: 0.80, blue: 0.90)),
+        Need(englishName: "Sick",     arabicName: "مريض",        emoji: "🤒", color: Color(red: 1.0, green: 0.80, blue: 0.90))
     ]
     
     @State private var selectedNeed: Need? = nil
@@ -45,21 +45,22 @@ struct NeedsPage: View {
             }
             .navigationTitle(isArabic ? "الاحتياجات" : "Needs")
             .navigationBarTitleDisplayMode(.large)
+            //button language
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                
+                // زر الرجوع إلى HomeView
+                ToolbarItem(placement: .navigationBarLeading) {
                     Button {
-                        withAnimation { isArabic.toggle() }
                     } label: {
-                        Text(isArabic ? "A/ع" : "ع/A")
-                            .font(.headline)
-                            .foregroundColor(.black)
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 10)
-                            .background(Color(red: 0.82, green: 0.88, blue: 1.0))
-                            .cornerRadius(20)
+                        HStack {
+                            Image(systemName: "chevron.backward")
+                            Text(isArabic ? "الرئيسية" : "Home")
+                        }
+                        .foregroundColor(.black)
                     }
-                    .buttonStyle(.plain)
                 }
+                
+               //button language
             }
             .sheet(item: $selectedNeed) { need in
                 NeedFullScreenView(need: need, isArabic: isArabic)

@@ -13,4 +13,5 @@ struct FoodItem: Identifiable {
     let name: String
     let emoji: String
     let color: Color
+    
 }
