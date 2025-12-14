@@ -11,38 +11,39 @@ struct Need: Identifiable {
 
 // MARK: - Needs Page (Matched Sizes to Activities)
 struct NeedsPage: View {
-    
+
     @AppStorage("isArabic") private var isArabic = false
+    @Environment(\.dismiss) private var dismiss     // ✅ added
     @State private var selectedNeed: Need? = nil
-    
+
     // Rhythm: red → orange → blue → green → yellow (repeat)
     private let needs: [Need] = [
         Need(englishName: "Food",       arabicName: "الأكل",          emoji: "🍎",  color: .red),
         Need(englishName: "Thirsty",    arabicName: "عطشان",         emoji: "🥤",  color: .orange.opacity(0.7)),
         Need(englishName: "Bathroom",   arabicName: "الحمّام",       emoji: "🚻",  color: .blue),
         Need(englishName: "Tired",      arabicName: "متعب",          emoji: "😌",  color: .green),
-        
+
         Need(englishName: "Help",       arabicName: "أحتاج مساعدة",   emoji: "🙋‍♀️", color: .yellow),
         Need(englishName: "Sick",       arabicName: "مريض",          emoji: "🤒",  color: .red),
         Need(englishName: "Sad",        arabicName: "زعلان",         emoji: "😢",  color: .orange.opacity(0.7)),
         Need(englishName: "Angry",      arabicName: "زعلان مرة",     emoji: "😡",  color: .blue),
-        
+
         Need(englishName: "Cold",       arabicName: "بردان",         emoji: "🥶",  color: .green),
         Need(englishName: "Hot",        arabicName: "حران",          emoji: "🥵",  color: .yellow),
         Need(englishName: "Hurt",       arabicName: "ألم",           emoji: "🤕",  color: .red),
         Need(englishName: "Scared",     arabicName: "خايف",          emoji: "😨",  color: .orange.opacity(0.7)),
-        
+
         Need(englishName: "Sleep",      arabicName: "أبي أنام",      emoji: "🛌",  color: .blue),
         Need(englishName: "Hug",        arabicName: "أبي حضن",       emoji: "🤗",  color: .green),
         Need(englishName: "Break",      arabicName: "استراحة",       emoji: "⏸️",  color: .yellow),
         Need(englishName: "Toothbrush", arabicName: "تفريش",         emoji: "🪥",  color: .red)
     ]
-    
+
     var body: some View {
         NavigationStack {
             ZStack {
                 Color(.systemGray6).ignoresSafeArea()
-                
+
                 ScrollView {
                     VStack(spacing: 22) {
                         ForEach(needs) { need in
@@ -62,21 +63,10 @@ struct NeedsPage: View {
             .navigationTitle(isArabic ? "الاحتياجات" : "Needs")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
-                // Language toggle (same as Activities)
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        withAnimation { isArabic.toggle() }
-                    } label: {
-                        Text(isArabic ? "A/ع" : "ع/A")
-                            .font(.headline)
-                            .foregroundColor(.black)
-                            .padding(.horizontal, 14)
-                            .padding(.vertical, 8)
-                            .background(Color(red: 0.82, green: 0.88, blue: 1.0))
-                            .cornerRadius(14)
-                            .shadow(color: .gray.opacity(0.25), radius: 3, x: 0, y: 2)
-                    }
-                }
+
+            
+
+                // ❌ Language toggle removed
             }
             .sheet(item: $selectedNeed) { need in
                 NeedDetailView(need: need)
@@ -90,16 +80,16 @@ struct NeedsPage: View {
 struct NeedBigCard: View {
     let need: Need
     let isArabic: Bool
-    
+
     var body: some View {
         HStack(spacing: 20) {
             Text(need.emoji)
                 .font(.system(size: 60))
-            
+
             Text(isArabic ? need.arabicName : need.englishName)
                 .font(.system(size: 28, weight: .bold, design: .rounded))
                 .foregroundColor(.primary)
-            
+
             Spacer()
         }
         .padding(22)
@@ -117,7 +107,7 @@ struct NeedPhraseBubble: View {
     let text: String
     let isSelected: Bool
     let color: Color
-    
+
     var body: some View {
         HStack {
             Text(text)
@@ -137,17 +127,17 @@ struct NeedPhraseBubble: View {
 // MARK: - Fullscreen Need View (Matched to ActivityFullScreenView sizing)
 struct NeedDetailView: View {
     let need: Need
-    
+
     @Environment(\.dismiss) private var dismiss
     @AppStorage("isArabic") private var isArabic = false
-    
+
     @State private var selectedPhrase: String? = nil
-    
+
     private var title: String { isArabic ? need.arabicName : need.englishName }
-    
+
     private var phrases: [String] {
         let key = need.englishName.lowercased()
-        
+
         if isArabic {
             switch key {
             case "food": return ["أنا جائع", "أبي آكل", "مو الحين"]
@@ -188,18 +178,18 @@ struct NeedDetailView: View {
             }
         }
     }
-    
+
     var body: some View {
         ZStack {
             need.color.opacity(0.15).ignoresSafeArea()
-            
+
             VStack(spacing: 25) {
                 Text(need.emoji)
                     .font(.system(size: 120))
-                
+
                 Text(title)
                     .font(.system(size: 42, weight: .bold))
-                
+
                 ScrollView {
                     VStack(spacing: 12) {
                         ForEach(phrases, id: \.self) { phrase in
@@ -213,7 +203,7 @@ struct NeedDetailView: View {
                     }
                     .padding(.horizontal)
                 }
-                
+
                 Button(isArabic ? "إغلاق" : "Close") {
                     dismiss()
                 }
