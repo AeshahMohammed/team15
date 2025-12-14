@@ -53,20 +53,16 @@ struct activitiespage: View {
                    .padding(.bottom)
                }
            }
+           .toolbar {
+                                           ToolbarItem(placement: .navigationBarLeading) {
+                                               OvalBackButton()
+                                           }
+                                       }
+
            .navigationTitle(isArabic ? "الأنشطة" : "Activities")
            .navigationBarTitleDisplayMode(.large)
            .toolbar {
                
-               // Back button
-               ToolbarItem(placement: .navigationBarLeading) {
-                   Button { dismiss() } label: {
-                       HStack {
-                           Image(systemName: "chevron.backward")
-                           Text(isArabic ? "الرئيسية" : "Home")
-                       }
-                       .foregroundColor(.black)
-                   }
-               }
                
                // Language toggle
                ToolbarItem(placement: .navigationBarTrailing) {

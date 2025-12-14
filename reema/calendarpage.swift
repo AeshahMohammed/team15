@@ -12,29 +12,14 @@ struct calendarpage: View {
     var body: some View {
         NavigationStack {
             ZStack(alignment: .bottomTrailing) {
-                Color(.systemGray6)
-                    .ignoresSafeArea()
-                
+       //         .toolbar {ToolbarItem(placement: .navigationBarLeading) {OvalBackButton()}}
+
                 ScrollView {
                     VStack(spacing: 22) {
                         
                         // Language toggle
                         HStack {
-                            Button(action: {
-                                withAnimation {
-                                    isArabic.toggle()
-                                }
-                            }) {
-                                Text(isArabic ? "A/ع" : "ع/A")
-                                    .font(.headline)
-                                    .foregroundColor(.black)
-                                    .padding(.horizontal, 20)
-                                    .padding(.vertical, 10)
-                                    .background(Color(red: 0.82, green: 0.88, blue: 1.0))
-                                    .cornerRadius(20)
-                                    .shadow(color: .gray.opacity(0.4),
-                                            radius: 4, x: 0, y: 2)
-                            }
+                       
                             
                             Spacer()
                         }
@@ -57,7 +42,8 @@ struct calendarpage: View {
                     }
                     .padding(.bottom)
                 }
-                
+                .toolbar {ToolbarItem(placement: .navigationBarLeading) {OvalBackButton()}}
+
                 // Floating + button
                 Button {
                     showAddSheet = true

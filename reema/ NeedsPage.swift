@@ -53,6 +53,12 @@ struct NeedsPage: View {
                     .padding(.bottom)
                 }
             }
+            .toolbar {
+                                            ToolbarItem(placement: .navigationBarLeading) {
+                                                OvalBackButton()
+                                            }
+                                        }
+
             .navigationTitle(isArabic ? "الاحتياجات" : "Needs")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {

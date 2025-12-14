@@ -19,7 +19,6 @@ struct HomeView: View {
                 // MARK: - Header (Language + Profile)
                 HStack {
                     Button(action: {
-                        vm.toggleLanguage()
                     }) {
                         Text(vm.isArabic ? "A/ع" : "ع/A")
                             .font(.headline)

@@ -31,6 +31,8 @@ struct PeoplePage: View {
             }
             .navigationTitle(viewModel.isArabic ? "الأشخاص" : "People")
            
+            .toolbar {ToolbarItem(placement: .navigationBarLeading) {OvalBackButton()}}
+
             .sheet(item: $viewModel.selectedItem) { item in
                 PersonFullscreen(
                     name: item.name,

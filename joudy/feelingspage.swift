@@ -48,23 +48,15 @@ struct feelingspage: View {
                 }
                 .padding()
             }
+            .toolbar {
+                                            ToolbarItem(placement: .navigationBarLeading) {
+                                                OvalBackButton()
+                                            }
+                                        }
+
             .navigationTitle(isArabic ? "المشاعر" : "Feelings")
             .navigationBarTitleDisplayMode(.large)
-            .toolbar {
-                
-                // زر الرجوع فقط (بدون زر لغة)
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        HStack {
-                            Image(systemName: "chevron.backward")
-                            Text(isArabic ? "الرئيسية" : "Home")
-                        }
-                        .foregroundColor(.black)
-                    }
-                }
-            }
+            
             .sheet(item: $selectedFeeling) { feeling in
                 FeelingFullScreenView(
                     viewModel: FeelingViewModel(activity: feeling, isArabic: isArabic)
