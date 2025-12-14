@@ -1,6 +1,6 @@
 import SwiftUI
 import AVFoundation // Needed for TTS
-
+import Combine
 // MARK: - Model
 struct Need: Identifiable {
     let id = UUID()
@@ -12,7 +12,6 @@ struct Need: Identifiable {
 
 // MARK: - Needs Page
 struct NeedsPage: View {
-
     @AppStorage("isArabic") private var isArabic = false
     @Environment(\.dismiss) private var dismiss
     @State private var selectedNeed: Need? = nil
@@ -235,6 +234,7 @@ struct NeedDetailView: View {
                               text: $customPhrase)
                         .textFieldStyle(.roundedBorder)
                         .cornerRadius(12)
+                       
 
                     Button(isArabic ? "إضافة" : "Add") {
                         let trimmed = customPhrase.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -244,6 +244,7 @@ struct NeedDetailView: View {
                             speak(trimmed)
                         }
                     }
+
                     .padding(.horizontal)
                     .padding(.vertical, 10)
                     .background(need.color)

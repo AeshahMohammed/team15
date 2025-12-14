@@ -4,7 +4,8 @@ struct FoodPage: View {
 
     @StateObject private var viewModel = FoodViewModel()
     @AppStorage("isArabic") private var isArabic = false   // ✅ ADD THIS
-
+    @StateObject private var moodVM = CharacterMoodViewModel()
+    
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -39,10 +40,10 @@ struct FoodPage: View {
                             .padding(.horizontal, 14)
                             .padding(.vertical, 8)
                             .background(Color(red: 0.82, green: 0.88, blue: 1.0))
-                            .cornerRadius(14)
-                            .shadow(color: .gray.opacity(0.25),
-                                    radius: 3, x: 0, y: 2)
-                    }
+                            .cornerRadius(20)
+                            
+                    }.focusable(false)
+                        .buttonStyle(.plain)
                 }
             }
             .sheet(item: $viewModel.selectedItem) { item in

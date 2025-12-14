@@ -14,6 +14,7 @@ struct PersonFullscreen: View {
     let emoji: String
     let color: Color
     let isArabic: Bool
+    @StateObject private var moodVM = CharacterMoodViewModel()
 
     @Environment(\.dismiss) private var dismiss
     @State private var customPhrase: String = ""
@@ -115,22 +116,31 @@ struct PersonFullscreen: View {
                 HStack {
                     TextField(isArabic ? "أضف عبارة" : "Add your own phrase", text: $customPhrase)
                         .textFieldStyle(.roundedBorder)
+                       
 
-                    Button(isArabic ? "إضافة" : "Add") {
-                        let trimmed = customPhrase.trimmingCharacters(in: .whitespaces)
-                        if !trimmed.isEmpty {
-                            userPhrases.append(trimmed)
-                            speak(trimmed) // <-- Speak new phrase immediately
-                            customPhrase = ""
+                    Button(action: {
+                        if !moodVM.isChildMode {
+                            let trimmed = customPhrase.trimmingCharacters(in: .whitespaces)
+                            if !trimmed.isEmpty {
+                                userPhrases.append(trimmed)
+                                speak(trimmed)
+                                customPhrase = ""
+                            }
                         }
+                    }) {
+                        Text(isArabic ? "إضافة" : "Add")
+                            .padding(.horizontal)
+                            .padding(.vertical, 10)
+                            .frame(minHeight: 44)
+                            .background(moodVM.isChildMode ? Color.gray : color) // gray if disabled
+                            .foregroundColor(.white)
+                            .cornerRadius(30)
                     }
-                    .padding(.horizontal)
-                    .padding(.vertical, 10)
-                    .background(color)
-                    .foregroundColor(.white)
-                    .cornerRadius(30)
+                    .disabled(moodVM.isChildMode)
                 }
                 .padding(.horizontal)
+
+             
 
                 // Close Button
                 Button(isArabic ? "إغلاق" : "Close") {

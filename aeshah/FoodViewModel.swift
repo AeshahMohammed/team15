@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 class FoodViewModel: ObservableObject {
-    
+    @StateObject private var moodVM = CharacterMoodViewModel()
     @Published var isArabic: Bool = false
     @Published var selectedItem: FoodItem? = nil
     @Published var userPhrases: [String] = []

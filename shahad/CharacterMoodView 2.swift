@@ -12,7 +12,7 @@ struct CharacterMoodView: View {
     
     @StateObject private var vm = CharacterMoodViewModel()
     @Environment(\.dismiss) var dismiss
-    
+
     var body: some View {
         
         ZStack {
@@ -22,7 +22,6 @@ struct CharacterMoodView: View {
             
             VStack {
                 
-                Spacer().frame(height: 40)
                 
                 ZStack {
                     
@@ -40,65 +39,33 @@ struct CharacterMoodView: View {
                                     .font(.system(size: 28, weight: .bold))
                                     .foregroundColor(.black)
                             }
-                            
                             Spacer()
                             
-                            Image("taifpic")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 120)
-                                .padding(.trailing, 10)
-                        }
-                        .padding(.horizontal, 25)
-                        .padding(.top, 20)
-                        
-                        VStack(alignment: .leading, spacing: 10) {
                             
-                            if vm.editingName {
-                                TextField(vm.text("Enter name", "أدخل الاسم"), text: $vm.childName)
-                                    .font(.system(size: 36, weight: .bold))
-                                    .padding(8)
-                                    .background(Color.white.opacity(0.4))
-                                    .cornerRadius(12)
-                                    .frame(maxWidth: 250)
-                                
-                                Button(vm.text("Save", "حفظ")) {
-                                    vm.editingName = false
-                                }
-                                .font(.headline)
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 6)
-                                .background(Color.white.opacity(0.7))
-                                .cornerRadius(10)
-                                
-                            } else {
-                                HStack(spacing: 8) {
-                                    Text(vm.childName)
-                                        .font(.system(size: 36, weight: .bold))
-                                    
-                                    Button(action: { vm.editingName = true }) {
-                                        Image(systemName: "pencil")
-                                            .font(.system(size: 22))
-                                            .foregroundColor(.black.opacity(0.7))
-                                    }
-                                }
-                            }
-                            
-                          
-                        }
-                        .padding(.leading, 25)
+                           
+                        } .padding(.horizontal, 25)
+                            .padding(.top, 20)
                         
-                        Spacer().frame(height: 20)
-                        
+
+                     
+                        Image("taifpic")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 180)    // adjust size
+                            .padding(.bottom, 20) // optional spacing before buttons
+                                Spacer()
+              
+
                         MoodButton(
                             title: vm.text("Parents Mood", "حالة الوالدين"),
                             action: { vm.toggleParentMood() }
                         )
-                        
+
                         MoodButton(
                             title: vm.text("Child Mood", "حالة الطفل"),
                             action: { vm.toggleChildMood() }
                         )
+
                         
                         Spacer()
                         

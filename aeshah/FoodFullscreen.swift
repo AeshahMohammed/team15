@@ -14,6 +14,8 @@ struct FoodFullscreen: View {
     @Environment(\.dismiss) private var dismiss
     @State private var synthesizer = AVSpeechSynthesizer()
     @State private var selectedPhrase: String? = nil
+    @StateObject private var moodVM = CharacterMoodViewModel()
+
 
     // MARK: - Text-to-Speech
     func speak(_ text: String) {
@@ -78,24 +80,30 @@ struct FoodFullscreen: View {
                 // Add Custom Phrase
                 VStack(spacing: 12) {
                     HStack {
+                        // TextField — disabled if in child mode
                         TextField(
                             viewModel.isArabic ? "أضف عبارة" : "Add your own phrase",
                             text: $viewModel.customPhrase
                         )
                         .textFieldStyle(.roundedBorder)
+                        .disabled(moodVM.isChildMode) // disable in child mode
 
-                        Button(viewModel.isArabic ? "إضافة" : "Add") {
-                            viewModel.addPhrase()
-                            // Speak the new phrase immediately
-                            if !viewModel.customPhrase.isEmpty {
+                        // Add button — disabled if in child mode
+                        Button(action: {
+                            if !moodVM.isChildMode && !viewModel.customPhrase.trimmingCharacters(in: .whitespaces).isEmpty {
+                                viewModel.addPhrase()
                                 speak(viewModel.customPhrase)
                             }
+                        }) {
+                            Text(viewModel.isArabic ? "إضافة" : "Add")
+                                .padding(.horizontal)
+                                .padding(.vertical, 10)
+                                .frame(minHeight: 44)
+                                .background(moodVM.isChildMode ? Color.gray : item.color) // gray if disabled
+                                .foregroundColor(.white)
+                                .cornerRadius(30)
                         }
-                        .padding(.horizontal)
-                        .padding(.vertical, 10)
-                        .background(item.color)
-                        .foregroundColor(.white)
-                        .cornerRadius(30)
+                        .disabled(moodVM.isChildMode) // disable button in child mode
                     }
                 }
                 .padding(.horizontal)
