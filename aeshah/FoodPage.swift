@@ -4,6 +4,7 @@ struct FoodPage: View {
 
     @StateObject private var viewModel = FoodViewModel()
     @AppStorage("isArabic") private var isArabic = false
+    @Environment(\.dismiss) private var dismiss   // ✅ REQUIRED
 
     var body: some View {
         NavigationStack {
@@ -22,17 +23,17 @@ struct FoodPage: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
 
-                // ✅ Back button — SAME STYLE AS ACTIVITIES PAGE
+                // ✅ BACK → RETURNS TO HOME VIEW
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button { } label: {
-                        HStack {
-                            Text(isArabic ? "الرئيسية  " : " Home ")
-                        }
-                        .foregroundColor(.black)
+                    Button {
+                        dismiss()
+                    } label: {
+                        Text(isArabic ? "الرئيسية  " : " Home ")
+                            .foregroundColor(.black)
                     }
                 }
 
-                // ✅ Language toggle — SAME STYLE AS ACTIVITIES PAGE
+                // ✅ Language toggle — SAME STYLE EVERYWHERE
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         withAnimation { isArabic.toggle() }
