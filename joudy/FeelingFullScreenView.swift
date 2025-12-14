@@ -1,9 +1,3 @@
-//
-//  FeelingFullScreenView.swift
-//  team15
-//
-//  Created by aeshah mohammed alabdulkarim on 04/12/2025.
-//
 import AVFoundation
 import SwiftUI
 
@@ -12,12 +6,13 @@ struct FeelingFullScreenView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var synthesizer = AVSpeechSynthesizer()
     
-    func speak(_ text: String) {
-           let utterance = AVSpeechUtterance(string: text)
-           utterance.voice = AVSpeechSynthesisVoice(language: viewModel.isArabic ? "ar-SA" : "en-US")
-           utterance.rate = 0.5
-           synthesizer.speak(utterance)
-       }
+    private func speak(_ text: String) {
+        let utterance = AVSpeechUtterance(string: text)
+        utterance.voice = AVSpeechSynthesisVoice(language: viewModel.isArabic ? "ar-SA" : "en-US")
+        utterance.rate = 0.5
+        synthesizer.speak(utterance)
+    }
+
     var body: some View {
         ZStack {
             viewModel.activity.color.opacity(0.15).ignoresSafeArea()
@@ -39,11 +34,12 @@ struct FeelingFullScreenView: View {
                             FeelingPhraseBubble(
                                 text: text,
                                 color: viewModel.selectedPhrase == text
-                                        ? viewModel.activity.color
-                                        : viewModel.activity.color.opacity(0.3)
+                                    ? viewModel.activity.color
+                                    : viewModel.activity.color.opacity(0.3)
                             )
                             .onTapGesture {
                                 viewModel.toggleSelected(text)
+                                speak(text) // ✅ Speak on tap
                             }
                         }
                     }
@@ -55,32 +51,42 @@ struct FeelingFullScreenView: View {
                 // Add phrase section
                 VStack(spacing: 12) {
                     HStack {
-                        TextField("Add your own phrase", text: $viewModel.newText)
-                            .textFieldStyle(.roundedBorder)
-                            .cornerRadius(30)
+                        TextField(
+                            viewModel.isArabic ? "أضف جملة خاصة بك" : "Add your own phrase",
+                            text: $viewModel.newText
+                        )
+                        .textFieldStyle(.roundedBorder)
+                        .cornerRadius(30)
                         
-                        Button("Add") {
+                        Button(viewModel.isArabic ? "إضافة" : "Add") {
+                            let newPhrase = viewModel.newText.trimmingCharacters(in: .whitespacesAndNewlines)
                             viewModel.addSentence()
+                            if !newPhrase.isEmpty {
+                                speak(newPhrase) // ✅ Speak new phrase
+                            }
                         }
-                            .padding(.horizontal)
-                            .padding(.vertical, 10)
-                            .background(viewModel.activity.color)
-                            .foregroundColor(.white)
-                            .cornerRadius(30)
+                        .padding(.horizontal)
+                        .padding(.vertical, 10)
+                        .background(viewModel.activity.color)
+                        .foregroundColor(.white)
+                        .cornerRadius(30)
                     }
                 }
                 .padding(.horizontal)
                 
                 // Close button
-                Button("Close") { dismiss() }
-                    .font(.system(size: 22, weight: .bold))
-                    .padding(.horizontal, 40)
-                    .padding(.vertical, 12)
-                    .background(Capsule().fill(viewModel.activity.color))
-                    .foregroundColor(.white)
-                    .padding(.bottom, 20)
+                Button(viewModel.isArabic ? "إغلاق" : "Close") {
+                    dismiss()
+                }
+                .font(.system(size: 22, weight: .bold))
+                .padding(.horizontal, 40)
+                .padding(.vertical, 12)
+                .background(Capsule().fill(viewModel.activity.color))
+                .foregroundColor(.white)
+                .padding(.bottom, 20)
             }
             .padding()
         }
+        .environment(\.layoutDirection, viewModel.isArabic ? .rightToLeft : .leftToRight)
     }
 }

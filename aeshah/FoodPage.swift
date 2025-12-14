@@ -1,16 +1,9 @@
-//
-//  FoodPage.swift
-//  team15
-//
-//  Created by aeshah mohammed alabdulkarim on 04/12/2025.
-//
-
-
 import SwiftUI
 
 struct FoodPage: View {
 
     @StateObject private var viewModel = FoodViewModel()
+    @AppStorage("isArabic") private var isArabic = false   // ✅ ADD THIS
 
     var body: some View {
         NavigationStack {
@@ -24,22 +17,41 @@ struct FoodPage: View {
                     }
                 }
                 .padding()
-            } .navigationTitle(viewModel.isArabic ? "الطعام" : "Food")
-            
-            //button language
-                .toolbar {
-                                ToolbarItem(placement: .navigationBarLeading) {
-                                    OvalBackButton()
-                                }
-                            }
+            }
+            .navigationTitle(isArabic ? "الطعام" : "Food")
+            .toolbar {
 
+                // 🔙 Back button
+                ToolbarItem(placement: .navigationBarLeading) {
+                    OvalBackButton()
+                }
+
+                // 🌍 Language toggle — FIXED (no ViewModel call)
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        withAnimation {
+                            isArabic.toggle()
+                        }
+                    } label: {
+                        Text(isArabic ? "A / ع" : "ع / A")
+                            .font(.headline)
+                            .foregroundColor(.black)
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 8)
+                            .background(Color(red: 0.82, green: 0.88, blue: 1.0))
+                            .cornerRadius(14)
+                            .shadow(color: .gray.opacity(0.25),
+                                    radius: 3, x: 0, y: 2)
+                    }
+                }
+            }
             .sheet(item: $viewModel.selectedItem) { item in
                 FoodFullscreen(item: item)
                     .environmentObject(viewModel)
             }
             .environment(
                 \.layoutDirection,
-                 viewModel.isArabic ? .rightToLeft : .leftToRight
+                isArabic ? .rightToLeft : .leftToRight
             )
         }
     }

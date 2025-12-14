@@ -1,4 +1,5 @@
 import SwiftUI
+import AVFoundation // Needed for TTS
 
 // MARK: - Model
 struct Need: Identifiable {
@@ -9,64 +10,77 @@ struct Need: Identifiable {
     let color: Color
 }
 
-// MARK: - Needs Page (Matched Sizes to Activities)
+// MARK: - Needs Page
 struct NeedsPage: View {
 
     @AppStorage("isArabic") private var isArabic = false
-    @Environment(\.dismiss) private var dismiss     // ✅ added
+    @Environment(\.dismiss) private var dismiss
     @State private var selectedNeed: Need? = nil
 
-    // Rhythm: red → orange → blue → green → yellow (repeat)
     private let needs: [Need] = [
-        Need(englishName: "Food",       arabicName: "الأكل",          emoji: "🍎",  color: .red),
-        Need(englishName: "Thirsty",    arabicName: "عطشان",         emoji: "🥤",  color: .orange.opacity(0.7)),
-        Need(englishName: "Bathroom",   arabicName: "الحمّام",       emoji: "🚻",  color: .blue),
-        Need(englishName: "Tired",      arabicName: "متعب",          emoji: "😌",  color: .green),
+        Need(englishName: "Food", arabicName: "الأكل", emoji: "🍎", color: .red),
+        Need(englishName: "Thirsty", arabicName: "عطشان", emoji: "🥤", color: .orange.opacity(0.7)),
+        Need(englishName: "Bathroom", arabicName: "الحمّام", emoji: "🚻", color: .blue),
+        Need(englishName: "Tired", arabicName: "متعب", emoji: "😌", color: .green),
 
-        Need(englishName: "Help",       arabicName: "أحتاج مساعدة",   emoji: "🙋‍♀️", color: .yellow),
-        Need(englishName: "Sick",       arabicName: "مريض",          emoji: "🤒",  color: .red),
-        Need(englishName: "Sad",        arabicName: "زعلان",         emoji: "😢",  color: .orange.opacity(0.7)),
-        Need(englishName: "Angry",      arabicName: "زعلان مرة",     emoji: "😡",  color: .blue),
+        Need(englishName: "Help", arabicName: "أحتاج مساعدة", emoji: "🙋‍♀️", color: .yellow),
+        Need(englishName: "Sick", arabicName: "مريض", emoji: "🤒", color: .red),
+        Need(englishName: "Sad", arabicName: "زعلان", emoji: "😢", color: .orange.opacity(0.7)),
+        Need(englishName: "Angry", arabicName: "زعلان مرة", emoji: "😡", color: .blue),
 
-        Need(englishName: "Cold",       arabicName: "بردان",         emoji: "🥶",  color: .green),
-        Need(englishName: "Hot",        arabicName: "حران",          emoji: "🥵",  color: .yellow),
-        Need(englishName: "Hurt",       arabicName: "ألم",           emoji: "🤕",  color: .red),
-        Need(englishName: "Scared",     arabicName: "خايف",          emoji: "😨",  color: .orange.opacity(0.7)),
+        Need(englishName: "Cold", arabicName: "بردان", emoji: "🥶", color: .green),
+        Need(englishName: "Hot", arabicName: "حران", emoji: "🥵", color: .yellow),
+        Need(englishName: "Hurt", arabicName: "ألم", emoji: "🤕", color: .red),
+        Need(englishName: "Scared", arabicName: "خايف", emoji: "😨", color: .orange.opacity(0.7)),
 
-        Need(englishName: "Sleep",      arabicName: "أبي أنام",      emoji: "🛌",  color: .blue),
-        Need(englishName: "Hug",        arabicName: "أبي حضن",       emoji: "🤗",  color: .green),
-        Need(englishName: "Break",      arabicName: "استراحة",       emoji: "⏸️",  color: .yellow),
-        Need(englishName: "Toothbrush", arabicName: "تفريش",         emoji: "🪥",  color: .red)
+        Need(englishName: "Sleep", arabicName: "أبي أنام", emoji: "🛌", color: .blue),
+        Need(englishName: "Hug", arabicName: "أبي حضن", emoji: "🤗", color: .green),
+        Need(englishName: "Break", arabicName: "استراحة", emoji: "⏸️", color: .yellow),
+        Need(englishName: "Toothbrush", arabicName: "تفريش", emoji: "🪥", color: .red)
     ]
 
     var body: some View {
         NavigationStack {
-            ZStack {
-                Color(.systemGray6).ignoresSafeArea()
-
-                ScrollView {
-                    VStack(spacing: 22) {
-                        ForEach(needs) { need in
-                            NeedBigCard(need: need, isArabic: isArabic)
-                                .onTapGesture { selectedNeed = need }
-                        }
+            ScrollView {
+                VStack(spacing: 22) {
+                    ForEach(needs) { need in
+                        NeedBigCard(need: need, isArabic: isArabic)
+                            .onTapGesture { selectedNeed = need }
                     }
-                    .padding(.bottom)
                 }
+                .padding(.bottom)
             }
-            .toolbar {
-                                            ToolbarItem(placement: .navigationBarLeading) {
-                                                OvalBackButton()
-                                            }
-                                        }
-
+            .background(Color(.systemGray6))
             .navigationTitle(isArabic ? "الاحتياجات" : "Needs")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
 
-            
+                // Back button
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button { dismiss() } label: {
+                        HStack {
+                            Image(systemName: "chevron.backward")
+                            Text(isArabic ? "الرئيسية" : "Home")
+                        }
+                        .foregroundColor(.black)
+                    }
+                }
 
-                // ❌ Language toggle removed
+                // Language toggle
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        withAnimation { isArabic.toggle() }
+                    } label: {
+                        Text(isArabic ? "A / ع" : "ع / A")
+                            .font(.headline)
+                            .foregroundColor(.black)
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 8)
+                            .background(Color(red: 0.82, green: 0.88, blue: 1.0))
+                            .cornerRadius(14)
+                            .shadow(color: .gray.opacity(0.25), radius: 3, x: 0, y: 2)
+                    }
+                }
             }
             .sheet(item: $selectedNeed) { need in
                 NeedDetailView(need: need)
@@ -76,15 +90,14 @@ struct NeedsPage: View {
     }
 }
 
-// MARK: - Need Card (Matched to ActivityBigCard)
+// MARK: - Need Card
 struct NeedBigCard: View {
     let need: Need
     let isArabic: Bool
 
     var body: some View {
         HStack(spacing: 20) {
-            Text(need.emoji)
-                .font(.system(size: 60))
+            Text(need.emoji).font(.system(size: 60))
 
             Text(isArabic ? need.arabicName : need.englishName)
                 .font(.system(size: 28, weight: .bold, design: .rounded))
@@ -102,7 +115,7 @@ struct NeedBigCard: View {
     }
 }
 
-// MARK: - Phrase Bubble (Matched to ActivityPhraseBubble)
+// MARK: - Phrase Bubble
 struct NeedPhraseBubble: View {
     let text: String
     let isSelected: Bool
@@ -124,7 +137,7 @@ struct NeedPhraseBubble: View {
     }
 }
 
-// MARK: - Fullscreen Need View (Matched to ActivityFullScreenView sizing)
+// MARK: - Fullscreen Need View with TTS + Custom Text
 struct NeedDetailView: View {
     let need: Need
 
@@ -132,49 +145,59 @@ struct NeedDetailView: View {
     @AppStorage("isArabic") private var isArabic = false
 
     @State private var selectedPhrase: String? = nil
+    @State private var customPhrase: String = ""
+    @State private var userPhrases: [String] = []
+    @State private var synthesizer = AVSpeechSynthesizer()
 
     private var title: String { isArabic ? need.arabicName : need.englishName }
+
+    private func speak(_ text: String) {
+        let utterance = AVSpeechUtterance(string: text)
+        utterance.voice = AVSpeechSynthesisVoice(language: isArabic ? "ar-SA" : "en-US")
+        utterance.rate = 0.5
+        synthesizer.speak(utterance)
+    }
 
     private var phrases: [String] {
         let key = need.englishName.lowercased()
 
         if isArabic {
             switch key {
-            case "food": return ["أنا جائع", "أبي آكل", "مو الحين"]
-            case "thirsty": return ["أنا عطشان", "أبي أشرب", "مو الحين"]
-            case "bathroom": return ["أبي الحمام", "خذني للحمام", "مو الحين"]
-            case "tired", "sleep": return ["أنا تعبان", "أبي أرتاح", "مو الحين"]
-            case "help": return ["أحتاج مساعدة", "ساعدني لو سمحت", "مو الحين"]
-            case "sick": return ["أنا مريض", "أحس بألم", "أبي دكتور"]
-            case "sad": return ["أنا زعلان", "أبي أرتاح", "مو الحين"]
-            case "angry": return ["أنا معصب", "خلني لحالي", "مو الحين"]
-            case "cold": return ["أنا بردان", "أبي بطانية", "مو الحين"]
-            case "hot": return ["أنا حران", "أبي موية", "مو الحين"]
-            case "hurt": return ["أنا أتألم", "هنا يوجعني", "أبي مساعدة"]
-            case "scared": return ["أنا خايف", "ابق معي", "مو الحين"]
-            case "hug": return ["أبي حضن", "أبي أمان", "مو الحين"]
-            case "break": return ["أبي استراحة", "أبي هدوء", "مو الحين"]
-            case "toothbrush": return ["أبي أفرّش", "خلنا نفرّش", "مو الحين"]
-            default: return ["أبي \(title)", "مو الحين", "ممكن تساعدني"]
+            case "food": return ["أنا جائع", "أبي آكل", "مو الحين"] + userPhrases
+            case "thirsty": return ["أنا عطشان", "أبي أشرب", "مو الحين"] + userPhrases
+            case "bathroom": return ["أبي الحمام", "خذني للحمام", "مو الحين"] + userPhrases
+            case "tired", "sleep": return ["أنا تعبان", "أبي أرتاح", "مو الحين"] + userPhrases
+            case "help": return ["أحتاج مساعدة", "ساعدني لو سمحت", "مو الحين"] + userPhrases
+            case "sick": return ["أنا مريض", "أحس بألم", "أبي دكتور"] + userPhrases
+            case "sad": return ["أنا زعلان", "أبي أرتاح", "مو الحين"] + userPhrases
+            case "angry": return ["أنا معصب", "خلني لحالي", "مو الحين"] + userPhrases
+            case "cold": return ["أنا بردان", "أبي بطانية", "مو الحين"] + userPhrases
+            case "hot": return ["أنا حران", "أبي موية", "مو الحين"] + userPhrases
+            case "hurt": return ["أنا أتألم", "هنا يوجعني", "أبي مساعدة"] + userPhrases
+            case "scared": return ["أنا خايف", "ابق معي", "مو الحين"] + userPhrases
+            case "hug": return ["أبي حضن", "أبي أمان", "مو الحين"] + userPhrases
+            case "break": return ["أبي استراحة", "أبي هدوء", "مو الحين"] + userPhrases
+            case "toothbrush": return ["أبي أفرّش", "خلنا نفرّش", "مو الحين"] + userPhrases
+            default: return ["أبي \(title)", "مو الحين", "ممكن تساعدني"] + userPhrases
             }
         } else {
             switch key {
-            case "food": return ["I am hungry", "I want food", "Not now"]
-            case "thirsty": return ["I am thirsty", "I want a drink", "Not now"]
-            case "bathroom": return ["I need the bathroom", "Take me to the bathroom", "Not now"]
-            case "tired", "sleep": return ["I am tired", "I want to rest", "Not now"]
-            case "help": return ["I need help", "Please help me", "Not now"]
-            case "sick": return ["I feel sick", "I am in pain", "I need a doctor"]
-            case "sad": return ["I feel sad", "I want a break", "Not now"]
-            case "angry": return ["I feel angry", "Leave me alone", "Not now"]
-            case "cold": return ["I am cold", "I want a blanket", "Not now"]
-            case "hot": return ["I am hot", "I want water", "Not now"]
-            case "hurt": return ["It hurts", "It hurts here", "I need help"]
-            case "scared": return ["I am scared", "Stay with me", "Not now"]
-            case "hug": return ["I want a hug", "I want comfort", "Not now"]
-            case "break": return ["I need a break", "I need quiet", "Not now"]
-            case "toothbrush": return ["I want to brush", "Let’s brush teeth", "Not now"]
-            default: return ["I want \(title)", "Not now", "Please help me"]
+            case "food": return ["I am hungry", "I want food", "Not now"] + userPhrases
+            case "thirsty": return ["I am thirsty", "I want a drink", "Not now"] + userPhrases
+            case "bathroom": return ["I need the bathroom", "Take me to the bathroom", "Not now"] + userPhrases
+            case "tired", "sleep": return ["I am tired", "I want to rest", "Not now"] + userPhrases
+            case "help": return ["I need help", "Please help me", "Not now"] + userPhrases
+            case "sick": return ["I feel sick", "I am in pain", "I need a doctor"] + userPhrases
+            case "sad": return ["I feel sad", "I want a break", "Not now"] + userPhrases
+            case "angry": return ["I feel angry", "Leave me alone", "Not now"] + userPhrases
+            case "cold": return ["I am cold", "I want a blanket", "Not now"] + userPhrases
+            case "hot": return ["I am hot", "I want water", "Not now"] + userPhrases
+            case "hurt": return ["It hurts", "It hurts here", "I need help"] + userPhrases
+            case "scared": return ["I am scared", "Stay with me", "Not now"] + userPhrases
+            case "hug": return ["I want a hug", "I want comfort", "Not now"] + userPhrases
+            case "break": return ["I need a break", "I need quiet", "Not now"] + userPhrases
+            case "toothbrush": return ["I want to brush", "Let’s brush teeth", "Not now"] + userPhrases
+            default: return ["I want \(title)", "Not now", "Please help me"] + userPhrases
             }
         }
     }
@@ -198,11 +221,36 @@ struct NeedDetailView: View {
                                 isSelected: selectedPhrase == phrase,
                                 color: need.color
                             )
-                            .onTapGesture { selectedPhrase = phrase }
+                            .onTapGesture {
+                                selectedPhrase = phrase
+                                speak(phrase)
+                            }
                         }
                     }
                     .padding(.horizontal)
                 }
+
+                HStack {
+                    TextField(isArabic ? "أضف جملة خاصة بك" : "Add your own phrase",
+                              text: $customPhrase)
+                        .textFieldStyle(.roundedBorder)
+                        .cornerRadius(12)
+
+                    Button(isArabic ? "إضافة" : "Add") {
+                        let trimmed = customPhrase.trimmingCharacters(in: .whitespacesAndNewlines)
+                        if !trimmed.isEmpty {
+                            userPhrases.append(trimmed)
+                            customPhrase = ""
+                            speak(trimmed)
+                        }
+                    }
+                    .padding(.horizontal)
+                    .padding(.vertical, 10)
+                    .background(need.color)
+                    .foregroundColor(.white)
+                    .cornerRadius(30)
+                }
+                .padding(.horizontal)
 
                 Button(isArabic ? "إغلاق" : "Close") {
                     dismiss()
