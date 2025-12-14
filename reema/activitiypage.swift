@@ -55,7 +55,13 @@ struct activitiespage: View {
 
                 // Back button (YOUR OvalBackButton)
                 ToolbarItem(placement: .navigationBarLeading) {
-                    OvalBackButton()
+                    Button { dismiss() } label: {
+                        HStack {
+                           
+                            Text(isArabic ? "الرئيسية  " : " Home " )
+                        }
+                        .foregroundColor(.black)
+                    }
                 }
 
                 // ✅ Language toggle added
@@ -68,9 +74,10 @@ struct activitiespage: View {
                             .foregroundColor(.black)
                             .padding(.horizontal, 14)
                             .padding(.vertical, 8)
-                            .background(Color(red: 0.82, green: 0.88, blue: 1.0))
+                            .background(Color.white)
                             .cornerRadius(14)
-                            .shadow(color: .gray.opacity(0.25), radius: 3, x: 0, y: 2)
+                           
+                           
                     }
                 }
             }

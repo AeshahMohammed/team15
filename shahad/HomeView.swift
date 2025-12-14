@@ -24,10 +24,10 @@ struct HomeView: View {
                             .font(.headline)
                             .foregroundColor(.black)
                             .padding(.horizontal, 20)
-                            .padding(.vertical, 12)
-                            .background(Color(red: 0.82, green: 0.88, blue: 1.0))
-                            .cornerRadius(20)
-                            .shadow(color: .gray.opacity(0.4), radius: 4, x: 0, y: 2)
+                            .padding(.vertical, 8)
+                            .background(Color.white)
+                            .cornerRadius(14)
+                      
                     }
                     
                     Spacer()

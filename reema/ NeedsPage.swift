@@ -59,8 +59,8 @@ struct NeedsPage: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button { dismiss() } label: {
                         HStack {
-                            Image(systemName: "chevron.backward")
-                            Text(isArabic ? "الرئيسية" : "Home")
+                          
+                            Text(isArabic ? " الرئيسية " : " Home  ")
                         }
                         .foregroundColor(.black)
                     }
@@ -76,9 +76,9 @@ struct NeedsPage: View {
                             .foregroundColor(.black)
                             .padding(.horizontal, 14)
                             .padding(.vertical, 8)
-                            .background(Color(red: 0.82, green: 0.88, blue: 1.0))
+                            .background(Color.white)
                             .cornerRadius(14)
-                            .shadow(color: .gray.opacity(0.25), radius: 3, x: 0, y: 2)
+                            
                     }
                 }
             }

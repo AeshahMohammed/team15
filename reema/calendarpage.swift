@@ -83,19 +83,20 @@ struct calendarpage: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     OvalBackButton()
+                    
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         withAnimation { isArabic.toggle() }
                     } label: {
-                        Text(isArabic ? "A/ع" : "ع/A")
+                        Text(isArabic ? "A / ع" : "ع / A")
                             .font(.headline)
                             .foregroundColor(.black)
                             .padding(.horizontal, 14)
                             .padding(.vertical, 8)
-                            .background(Color(red: 0.82, green: 0.88, blue: 1.0))
+                            .background(Color.white)
                             .cornerRadius(14)
-                            .shadow(color: .gray.opacity(0.25), radius: 3, x: 0, y: 2)
+                           
                     }
                 }
             }
