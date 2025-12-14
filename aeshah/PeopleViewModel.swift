@@ -16,25 +16,25 @@ final class PeopleViewModel: ObservableObject {
 
     // People list (moved from view)
     @Published var peopleItems: [PeopleItem] = [
-        PeopleItem(name: "mom", emoji: "👩‍🦰", color: .pink),
-        PeopleItem(name: "dad", emoji: "👨‍🦱", color: .blue),
-        PeopleItem(name: "sister", emoji: "👧", color: .purple),
+        PeopleItem(name: "mom", emoji: "👩‍🦰", color: .red),
+        PeopleItem(name: "dad", emoji: "👨‍🦱", color: .orange.opacity(0.7)),
+        PeopleItem(name: "sister", emoji: "👧", color:.blue),
         PeopleItem(name: "brother", emoji: "👦", color: .green),
-        PeopleItem(name: "maid", emoji: "👩‍🍳", color: .cyan),
-        PeopleItem(name: "driver", emoji: "🧑‍✈️", color: .orange),
+        PeopleItem(name: "maid", emoji: "👩‍🍳", color:.red),
+        PeopleItem(name: "driver", emoji: "🧑‍✈️", color: .orange.opacity(0.7)),
 
-        PeopleItem(name: "grandpa", emoji: "👴", color: .brown),
-        PeopleItem(name: "grandma", emoji: "👵", color: .mint),
-        PeopleItem(name: "uncle", emoji: "🧔", color: .indigo),
-        PeopleItem(name: "auntie", emoji: "👩‍🦱", color: .pink),
-        PeopleItem(name: "cousin", emoji: "🧑", color: .teal),
-        PeopleItem(name: "teacher", emoji: "👩‍🏫", color: .yellow),
+        PeopleItem(name: "grandpa", emoji: "👴", color: .blue),
+        PeopleItem(name: "grandma", emoji: "👵", color: .green),
+        PeopleItem(name: "uncle", emoji: "🧔", color: .red),
+        PeopleItem(name: "auntie", emoji: "👩‍🦱", color:.orange.opacity(0.7)),
+        PeopleItem(name: "cousin", emoji: "🧑", color: .blue),
+        PeopleItem(name: "teacher", emoji: "👩‍🏫", color: .green),
         PeopleItem(name: "doctor", emoji: "👨‍⚕️", color: .red),
-        PeopleItem(name: "therapist", emoji: "👩‍⚕️", color: .indigo),
+        PeopleItem(name: "therapist", emoji: "👩‍⚕️", color: .orange.opacity(0.7)),
 
-        PeopleItem(name: "friend", emoji: "🧑‍🤝‍🧑", color: .purple.opacity(0.7)),
-        PeopleItem(name: "classmates", emoji: "👨‍👩‍👧‍👦", color: .orange.opacity(0.7)),
-        PeopleItem(name: "neighbor", emoji: "🏘️", color: .green.opacity(0.7))
+        PeopleItem(name: "friend", emoji: "🧑‍🤝‍🧑", color: .blue),
+        PeopleItem(name: "classmates", emoji: "👨‍👩‍👧‍👦",color: .green),
+        PeopleItem(name: "neighbor", emoji: "🏘️", color: .red)
     ]
 
     // MARK: - Arabic lookup moved here
