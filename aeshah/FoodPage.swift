@@ -3,7 +3,7 @@ import SwiftUI
 struct FoodPage: View {
 
     @StateObject private var viewModel = FoodViewModel()
-    @AppStorage("isArabic") private var isArabic = false   // ✅ ADD THIS
+    @AppStorage("isArabic") private var isArabic = false
 
     var body: some View {
         NavigationStack {
@@ -19,19 +19,23 @@ struct FoodPage: View {
                 .padding()
             }
             .navigationTitle(isArabic ? "الطعام" : "Food")
+            .navigationBarTitleDisplayMode(.large)
             .toolbar {
 
-                // 🔙 Back button
+                // ✅ Back button — SAME STYLE AS ACTIVITIES PAGE
                 ToolbarItem(placement: .navigationBarLeading) {
-                    OvalBackButton()
+                    Button { } label: {
+                        HStack {
+                            Text(isArabic ? "الرئيسية  " : " Home ")
+                        }
+                        .foregroundColor(.black)
+                    }
                 }
 
-                // 🌍 Language toggle — FIXED (no ViewModel call)
+                // ✅ Language toggle — SAME STYLE AS ACTIVITIES PAGE
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
-                        withAnimation {
-                            isArabic.toggle()
-                        }
+                        withAnimation { isArabic.toggle() }
                     } label: {
                         Text(isArabic ? "A / ع" : "ع / A")
                             .font(.headline)
@@ -40,7 +44,6 @@ struct FoodPage: View {
                             .padding(.vertical, 8)
                             .background(Color.white)
                             .cornerRadius(14)
-                            
                     }
                 }
             }

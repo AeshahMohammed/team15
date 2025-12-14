@@ -12,7 +12,7 @@ import Combine
 struct PeoplePage: View {
 
     @StateObject private var viewModel = PeopleViewModel()
-    @AppStorage("isArabic") private var isArabic = false   // ✅ added (no errors)
+    @AppStorage("isArabic") private var isArabic = false
 
     var body: some View {
         NavigationStack {
@@ -30,13 +30,20 @@ struct PeoplePage: View {
                 .padding()
             }
             .navigationTitle(isArabic ? "الأشخاص" : "People")
+            .navigationBarTitleDisplayMode(.large)
             .toolbar {
-                // Back button
+
+                // ✅ Back button — SAME STYLE AS YOUR ACTIVITIES PAGE
                 ToolbarItem(placement: .navigationBarLeading) {
-                    OvalBackButton()
+                    Button { } label: {
+                        HStack {
+                            Text(isArabic ? "الرئيسية  " : " Home ")
+                        }
+                        .foregroundColor(.black)
+                    }
                 }
 
-                // Language toggle (no ViewModel call)
+                // ✅ Language toggle — SAME STYLE AS YOUR ACTIVITIES PAGE
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         withAnimation { isArabic.toggle() }
