@@ -27,7 +27,12 @@ struct FoodPage: View {
             } .navigationTitle(viewModel.isArabic ? "الطعام" : "Food")
             
             //button language
-           
+                .toolbar {
+                                ToolbarItem(placement: .navigationBarLeading) {
+                                    OvalBackButton()
+                                }
+                            }
+
             .sheet(item: $viewModel.selectedItem) { item in
                 FoodFullscreen(item: item)
                     .environmentObject(viewModel)
