@@ -155,19 +155,19 @@ struct ActivityFullScreenView: View {
 
         if isArabic {
             switch key {
-            case "story time": return ["أبي وقت القصة", "مو أبي وقت القصة", "اقرأ معي"]
-            case "drawing": return ["أبي أرسم", "مو أبي أرسم", "ارسم معي"]
-            case "dancing": return ["أبي أرقص", "مو أبي أرقص", "ارقص معي"]
-            case "playtime": return ["أبي ألعب", "مو أبي ألعب", "العب معي"]
-            case "outside": return ["أبي أطلع برا", "مو أبي أطلع", "تعال معي برا"]
-            case "quiet time": return ["أبي وقت هدوء", "مو أبي هدوء", "أحتاج مكان هادي"]
-            case "music": return ["أبي موسيقى", "مو أبي موسيقى", "شغل موسيقى"]
-            case "bath time": return ["أبي أستحم", "مو أبي أستحم", "خلنا نستحم"]
-            case "snack time": return ["أبي سناك", "مو أبي سناك", "أبي أكل"]
-            case "puzzle": return ["أبي تركيب", "مو أبي تركيب", "خلنا نركب"]
-            case "blocks": return ["أبي مكعبات", "مو أبي مكعبات", "خلنا نبني"]
-            case "walk": return ["أبي أمشي", "مو أبي أمشي", "امش معي"]
-            default: return ["أبي \(displayName)", "مو أبي \(displayName)", "خلنا \(displayName)"]
+            case "story time": return ["أبي وقت القصة", "ما أبي وقت القصة", "اقرأ معي"]
+            case "drawing": return ["أبي أرسم", "ما أبي أرسم", "ارسم معي"]
+            case "dancing": return ["أبي أرقص", "ما أبي أرقص", "ارقص معي"]
+            case "playtime": return ["أبي ألعب", "ما أبي ألعب", "العب معي"]
+            case "outside": return ["أبي أطلع برا", "ما أبي أطلع", "تعال معي برا"]
+            case "quiet time": return ["أبي وقت هدوء", "ما أبي هدوء", "أحتاج مكان هادي"]
+            case "music": return ["أبي موسيقى", "ما أبي موسيقى", "شغل موسيقى"]
+            case "bath time": return ["أبي أستحم", "ما أبي أستحم", "خلنا نستحم"]
+            case "snack time": return ["أبي سناك", "ما أبي سناك", "أبي أكل"]
+            case "puzzle": return ["أبي تركيب", "ما أبي تركيب", "خلنا نركب"]
+            case "blocks": return ["أبي مكعبات", "ما أبي مكعبات", "خلنا نبني"]
+            case "walk": return ["أبي أمشي", "ما أبي أمشي", "امش معي"]
+            default: return ["أبي \(displayName)", "ما أبي \(displayName)", "خلنا \(displayName)"]
             }
         } else {
             switch key {
