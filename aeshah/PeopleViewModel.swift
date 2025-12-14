@@ -15,28 +15,28 @@ final class PeopleViewModel: ObservableObject {
     @Published var selectedItem: PeopleItem? = nil
 
     // People list (moved from view)
-    @Published var peopleItems: [PeopleItem] = [
-        PeopleItem(name: "mom", emoji: "👩‍🦰", color: .red),
-        PeopleItem(name: "dad", emoji: "👨‍🦱", color: .orange.opacity(0.7)),
-        PeopleItem(name: "sister", emoji: "👧", color:.blue),
-        PeopleItem(name: "brother", emoji: "👦", color: .green),
-        PeopleItem(name: "maid", emoji: "👩‍🍳", color:.red),
-        PeopleItem(name: "driver", emoji: "🧑‍✈️", color: .orange.opacity(0.7)),
+     @Published var peopleItems: [PeopleItem] = [
+         PeopleItem(name: "mom", emoji: "👩‍🦰", color: .red),
+         PeopleItem(name: "dad", emoji: "👨‍🦱", color: .orange.opacity(0.7)),
+         PeopleItem(name: "sister", emoji: "👧", color:.blue),
+         PeopleItem(name: "brother", emoji: "👦", color: .green),
+         PeopleItem(name: "friend", emoji: "🧑‍🤝‍🧑", color: .yellow),
+         PeopleItem(name: "maid", emoji: "👩‍🍳", color:.red),
+         PeopleItem(name: "driver", emoji: "🧑‍✈️", color: .orange.opacity(0.7)),
 
-        PeopleItem(name: "grandpa", emoji: "👴", color: .blue),
-        PeopleItem(name: "grandma", emoji: "👵", color: .green),
-        PeopleItem(name: "uncle", emoji: "🧔", color: .red),
-        PeopleItem(name: "auntie", emoji: "👩‍🦱", color:.orange.opacity(0.7)),
-        PeopleItem(name: "cousin", emoji: "🧑", color: .blue),
-        PeopleItem(name: "teacher", emoji: "👩‍🏫", color: .green),
-        PeopleItem(name: "doctor", emoji: "👨‍⚕️", color: .red),
-        PeopleItem(name: "therapist", emoji: "👩‍⚕️", color: .orange.opacity(0.7)),
+         PeopleItem(name: "grandpa", emoji: "👴", color: .blue),
+         PeopleItem(name: "grandma", emoji: "👵", color: .green),
+         PeopleItem(name: "classmates", emoji: "👨‍👩‍👧‍👦",color: .yellow),
 
-        PeopleItem(name: "friend", emoji: "🧑‍🤝‍🧑", color: .blue),
-        PeopleItem(name: "classmates", emoji: "👨‍👩‍👧‍👦",color: .green),
-        PeopleItem(name: "neighbor", emoji: "🏘️", color: .red)
-    ]
+         PeopleItem(name: "uncle", emoji: "🧔", color: .red),
+         PeopleItem(name: "auntie", emoji: "👩‍🦱", color:.orange.opacity(0.7)),
+         PeopleItem(name: "cousin", emoji: "🧑", color: .blue),
+         PeopleItem(name: "teacher", emoji: "👩‍🏫", color: .green),
+         PeopleItem(name: "neighbor", emoji: "🏘️", color: .yellow),
+         PeopleItem(name: "doctor", emoji: "👨‍⚕️", color: .red),
+         PeopleItem(name: "therapist", emoji: "👩‍⚕️", color: .orange.opacity(0.7)),
 
+     ]
     // MARK: - Arabic lookup moved here
     static func arabicName(for name: String) -> String {
         switch name {

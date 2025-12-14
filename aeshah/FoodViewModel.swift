@@ -10,36 +10,36 @@ import SwiftUI
 import Combine
 
 class FoodViewModel: ObservableObject {
-
+    
     @Published var isArabic: Bool = false
     @Published var selectedItem: FoodItem? = nil
     @Published var userPhrases: [String] = []
     @Published var customPhrase: String = ""
-
+    
     let foodItems: [FoodItem] = [
-        FoodItem(name: "apple", emoji: "🍎", color: .red),
-        FoodItem(name: "orange", emoji: "🍊", color: .orange.opacity(0.7)),
-        FoodItem(name: "blueberry", emoji: "🫐", color: .blue),
-        FoodItem(name: "full", emoji: "😌", color: .green),
-        FoodItem(name: "strawberry", emoji: "🍓", color: .red),
-        FoodItem(name: "banana", emoji: "🍌", color: .orange.opacity(0.7)),
-        FoodItem(name: "raspberry", emoji: "🍇", color: .blue),
-        FoodItem(name: "juice", emoji: "🧃", color: .green),
-        FoodItem(name: "tomato", emoji: "🍅", color: .red),
-        FoodItem(name: "bread", emoji: "🍞", color: .orange.opacity(0.7)),
-        FoodItem(name: "fish", emoji: "🐟", color: .blue),
-        FoodItem(name: "rice", emoji: "🍚", color: .green),
-        FoodItem(name: "spice", emoji: "🌶️", color: .red),
-        FoodItem(name: "chicken", emoji: "🍗", color: .orange.opacity(0.7)),
-        FoodItem(name: "salt", emoji: "🧂", color: .blue),
-        FoodItem(name: "tea", emoji: "🫖", color: .green),
-        FoodItem(name: "meat", emoji: "🥩", color: .red),
-        FoodItem(name: "burger", emoji: "🍔", color: .orange.opacity(0.7)),
-        FoodItem(name: "egg", emoji: "🥚", color: .blue),
-        FoodItem(name: "milk", emoji: "🥛", color: .green),
-        FoodItem(name: "pizza", emoji: "🍕", color: .red),
-        FoodItem(name: "chocolate", emoji: "🍫", color: .orange),
-    ]
+            FoodItem(name: "apple", emoji: "🍎", color: .red),
+            FoodItem(name: "orange", emoji: "🍊", color: .orange.opacity(0.7)),
+            FoodItem(name: "blueberry", emoji: "🫐", color: .blue),
+            FoodItem(name: "full", emoji: "😌", color: .green),
+            FoodItem(name: "banana", emoji: "🍌", color: .yellow),
+            FoodItem(name: "strawberry", emoji: "🍓", color: .red),
+            FoodItem(name: "bread", emoji: "🍞", color: .orange.opacity(0.7)),
+            FoodItem(name: "raspberry", emoji: "🍇", color: .blue),
+            FoodItem(name: "juice", emoji: "🧃", color: .green),
+            FoodItem(name: "egg", emoji: "🥚", color: .yellow),
+            FoodItem(name: "tomato", emoji: "🍅", color: .red),
+            FoodItem(name: "burger", emoji: "🍔", color: .orange.opacity(0.7)),
+            FoodItem(name: "fish", emoji: "🐟", color: .blue),
+            FoodItem(name: "rice", emoji: "🍚", color: .green),
+            FoodItem(name: "pizza", emoji: "🍕", color: .yellow),
+            FoodItem(name: "spice", emoji: "🌶️", color: .red),
+            FoodItem(name: "chicken", emoji: "🍗", color: .orange.opacity(0.7)),
+            FoodItem(name: "salt", emoji: "🧂", color: .blue),
+            FoodItem(name: "tea", emoji: "🫖", color: .green),
+            FoodItem(name: "chocolate", emoji: "🍫", color: .yellow),
+            FoodItem(name: "meat", emoji: "🥩", color: .red),
+            FoodItem(name: "milk", emoji: "🥛", color: .orange),
+        ]
 
     func arabicName(for name: String) -> String {
         switch name {

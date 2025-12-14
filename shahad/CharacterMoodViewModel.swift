@@ -14,8 +14,8 @@ class CharacterMoodViewModel: ObservableObject {
     @AppStorage("isArabic") var isArabic = false
     @AppStorage("selectedMood") var selectedMood = ""
     @AppStorage("isChildMode") var isChildMode = false
-    @AppStorage("childName") var childName = "نجد"
-    @AppStorage("childAge") var childAge = "7 سنوات"
+    @AppStorage("childName") var childName = ""
+    @AppStorage("childAge") var childAge = ""
     
     @Published var editingName = false
     @Published var editingAge = false

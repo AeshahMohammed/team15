@@ -21,16 +21,16 @@ struct feelingspage: View {
     @Environment(\.dismiss) private var dismiss      // زر الرجوع
     
     private let feelings: [Feeling] = [
-        Feeling(nameEnglish: "happy",     nameArabic: "سعيد",    emoji: "😄", color: .yellow),
-        Feeling(nameEnglish: "sad",       nameArabic: "حزين",    emoji: "☹️", color: .blue),
-        Feeling(nameEnglish: "scared",    nameArabic: "خائف",    emoji: "😨", color: .purple),
-        Feeling(nameEnglish: "angry",     nameArabic: "غاضب",    emoji: "😡", color: .red),
-        Feeling(nameEnglish: "excited",   nameArabic: "متحمس",   emoji: "😆", color: .orange),
-        Feeling(nameEnglish: "shy",       nameArabic: "خجول",    emoji: "☺️", color: .pink),
-        Feeling(nameEnglish: "tired",     nameArabic: "متعب",    emoji: "🫩", color: .teal),
-        Feeling(nameEnglish: "proud",     nameArabic: "فخور",    emoji: "😌", color: .blue),
-        Feeling(nameEnglish: "bored",     nameArabic: "ضجران",   emoji: "🥱", color: .green),
-        Feeling(nameEnglish: "surprised", nameArabic: "مندهش",  emoji: "😲", color: .mint)
+        Feeling(nameEnglish: "happy",     nameArabic: "سعيد",    emoji: "😄", color: Color(red: 0.55, green: 0.88, blue: 0.29)),
+        Feeling(nameEnglish: "sad",       nameArabic: "حزين",    emoji: "☹️", color: Color(red: 0.55, green: 0.88, blue: 0.29)),
+        Feeling(nameEnglish: "scared",    nameArabic: "خائف",    emoji: "😨", color: Color(red: 0.55, green: 0.88, blue: 0.29)),
+        Feeling(nameEnglish: "angry",     nameArabic: "غاضب",    emoji: "😡",color: Color(red: 0.55, green: 0.88, blue: 0.29)),
+        Feeling(nameEnglish: "excited",   nameArabic: "متحمس",   emoji: "😆", color: Color(red: 0.55, green: 0.88, blue: 0.29)),
+        Feeling(nameEnglish: "shy",       nameArabic: "خجول",    emoji: "☺️", color: Color(red: 0.55, green: 0.88, blue: 0.29)),
+        Feeling(nameEnglish: "tired",     nameArabic: "متعب",    emoji: "🫩", color: Color(red: 0.55, green: 0.88, blue: 0.29)),
+        Feeling(nameEnglish: "proud",     nameArabic: "فخور",    emoji: "😌", color: Color(red: 0.55, green: 0.88, blue: 0.29)),
+        Feeling(nameEnglish: "bored",     nameArabic: "ضجران",   emoji: "🥱", color: Color(red: 0.55, green: 0.88, blue: 0.29)),
+        Feeling(nameEnglish: "surprised", nameArabic: "مندهش",  emoji: "😲", color: Color(red: 0.55, green: 0.88, blue: 0.29))
     ]
     
     @State private var selectedFeeling: Feeling? = nil

@@ -65,7 +65,7 @@ struct HomeView: View {
                         ColoredSection(
                             title: vm.title(for: "Needs", arabic: "الاحتياجات"),
                             color: Color(red: 1.0, green: 0.89, blue: 0.89),
-                            emoji: "🧩"
+                            emoji: "🧺"
                         )
                         .onTapGesture { openNeedsPage = true }
                     }
@@ -74,13 +74,13 @@ struct HomeView: View {
                         ColoredSection(
                             title: vm.title(for: "People", arabic: "الأشخاص"),
                             color: Color(red: 1.0, green: 0.95, blue: 0.80),
-                            emoji: "🧑‍🤝‍🧑"
+                            emoji: "🧒🏻"
                         )
                         .onTapGesture { openPeoplePage = true }
 
                         ColoredSection(
                             title: vm.title(for: "Food", arabic: "الطعام"),
-                            color: Color(red: 1.0, green: 0.96, blue: 0.80),
+                            color: Color(red: 12.0, green: 0.89, blue: 0.80),
                             emoji: "🍽️"
                         )
                         .onTapGesture { openFoodPage = true }
@@ -91,7 +91,7 @@ struct HomeView: View {
                     } label: {
                         ColoredSection(
                             title: vm.title(for: "Feeling", arabic: "المشاعر"),
-                            color: Color(red: 0.85, green: 0.97, blue: 0.90),
+                            color: Color(red: 0.86, green: 1.0, blue: 0.70),
                             emoji: "😊"
                         )
                     }
