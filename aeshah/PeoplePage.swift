@@ -2,8 +2,6 @@
 //  PeoplePage.swift
 //  team15
 //
-//  Created by aeshah mohammed alabdulkarim on 04/12/2025.
-//
 
 import SwiftUI
 import Combine
@@ -13,6 +11,7 @@ struct PeoplePage: View {
 
     @StateObject private var viewModel = PeopleViewModel()
     @AppStorage("isArabic") private var isArabic = false
+    @Environment(\.dismiss) private var dismiss   // ✅ REQUIRED
 
     var body: some View {
         NavigationStack {
@@ -20,11 +19,15 @@ struct PeoplePage: View {
                 VStack(spacing: 22) {
                     ForEach(viewModel.peopleItems) { item in
                         PersonCard(
-                            name: isArabic ? PeopleViewModel.arabicName(for: item.name) : item.name.capitalized,
+                            name: isArabic
+                                ? PeopleViewModel.arabicName(for: item.name)
+                                : item.name.capitalized,
                             emoji: item.emoji,
                             color: item.color
                         )
-                        .onTapGesture { viewModel.select(item) }
+                        .onTapGesture {
+                            viewModel.select(item)
+                        }
                     }
                 }
                 .padding()
@@ -33,17 +36,17 @@ struct PeoplePage: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
 
-                // ✅ Back button — SAME STYLE AS YOUR ACTIVITIES PAGE
+                // ✅ BACK → RETURNS TO HOME VIEW
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button { } label: {
-                        HStack {
-                            Text(isArabic ? "الرئيسية  " : " Home ")
-                        }
-                        .foregroundColor(.black)
+                    Button {
+                        dismiss()
+                    } label: {
+                        Text(isArabic ? "الرئيسية  " : " Home ")
+                            .foregroundColor(.black)
                     }
                 }
 
-                // ✅ Language toggle — SAME STYLE AS YOUR ACTIVITIES PAGE
+                // ✅ Language toggle (same style everywhere)
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         withAnimation { isArabic.toggle() }
@@ -66,7 +69,10 @@ struct PeoplePage: View {
                     isArabic: isArabic
                 )
             }
-            .environment(\.layoutDirection, isArabic ? .rightToLeft : .leftToRight)
+            .environment(
+                \.layoutDirection,
+                isArabic ? .rightToLeft : .leftToRight
+            )
         }
     }
 }
