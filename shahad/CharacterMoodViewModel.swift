@@ -15,10 +15,8 @@ class CharacterMoodViewModel: ObservableObject {
     @AppStorage("selectedMood") var selectedMood = ""
     @AppStorage("isChildMode") var isChildMode = false
     @AppStorage("childName") var childName = ""
-    @AppStorage("childAge") var childAge = ""
     
     @Published var editingName = false
-    @Published var editingAge = false
     
     func toggleParentMood() {
         selectedMood = "parent"

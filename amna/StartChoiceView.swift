@@ -62,7 +62,7 @@ struct StartChoiceView: View {
                         .foregroundColor(.black)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
-                        .background(buttonGreen)
+                        .background(Color(red: 204/255, green: 241/255, blue: 214/255))
                         .cornerRadius(26)
                 }
                 .padding(.horizontal, 40)
@@ -76,7 +76,7 @@ struct StartChoiceView: View {
                         .foregroundColor(.black)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
-                        .background(buttonBlue)
+                        .background(Color(red: 192/255, green: 225/255, blue: 255/255))
                         .cornerRadius(26)
                 }
                 .padding(.horizontal, 40)

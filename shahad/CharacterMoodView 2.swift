@@ -84,35 +84,7 @@ struct CharacterMoodView: View {
                                 }
                             }
                             
-                            if vm.editingAge {
-                                TextField(vm.text("Enter age", "أدخل العمر"), text: $vm.childAge)
-                                    .font(.system(size: 22))
-                                    .padding(8)
-                                    .background(Color.white.opacity(0.4))
-                                    .cornerRadius(12)
-                                    .frame(maxWidth: 200)
-                                
-                                Button(vm.text("Save", "حفظ")) {
-                                    vm.editingAge = false
-                                }
-                                .font(.headline)
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 6)
-                                .background(Color.white.opacity(0.7))
-                                .cornerRadius(10)
-                                
-                            } else {
-                                HStack(spacing: 8) {
-                                    Text(vm.childAge)
-                                        .font(.system(size: 22))
-                                    
-                                    Button(action: { vm.editingAge = true }) {
-                                        Image(systemName: "pencil")
-                                            .font(.system(size: 20))
-                                            .foregroundColor(.black.opacity(0.7))
-                                    }
-                                }
-                            }
+                          
                         }
                         .padding(.leading, 25)
                         

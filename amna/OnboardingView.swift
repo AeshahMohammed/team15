@@ -20,13 +20,16 @@ struct OnboardingView: View {
     private let buttonLong = Color(hex: "#BCCFFB")   // أزرق
     private let fieldNameColor   = Color(hex: "#F7D7CF")   // وردي فاتح لحقل الاسم
     private let buttonGreen      = Color(hex: "#BBF7BB")   // أخضر فاتح لزر "ابدأ / Start"
-    private let backgroundBeige  = Color(hex: "#FFF4D9")   // خلفية الصفحة
-    
+    //private let backgroundBeige  = Color(hex: "#FFF4D9")   // خلفية الصفحة
+   // Color(red: 192/255, green: 225/255, blue: 255/255) // C0E1FF
+  //  Color(red: 255/255, green: 205/255, blue: 206/255) // FFCDCE
+  //  Color(red: 204/255, green: 241/255, blue: 214/255) // CCF1D6
+   // Color(red: 255/255, green: 243/255, blue: 191/255) // FFF3BF
     var body: some View {
         NavigationStack {
             ZStack {
                 
-                backgroundBeige.ignoresSafeArea()
+                //backgroundBeige.ignoresSafeArea()
                 
                 VStack(spacing: 0) {
                     
@@ -41,7 +44,7 @@ struct OnboardingView: View {
                                 .foregroundColor(.black)
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 6)
-                                .background(Color(hex: "#BCCFFB"))
+                                .background(Color(red: 192/255, green: 225/255, blue: 255/255))
                                 .cornerRadius(20)
                         }
                     }
@@ -85,7 +88,7 @@ struct OnboardingView: View {
                             .foregroundColor(.black)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 14)
-                            .background(buttonGreen)
+                            .background(Color(red: 255/255, green: 205/255, blue: 206/255) )
                             .cornerRadius(26)
                     }
                     .padding(.horizontal, 40)
@@ -124,7 +127,7 @@ struct OnboardingView: View {
         pillTextField(
             placeholder: languageVM.namePlaceholder(isCompact: true),
             text: $viewModel.firstName,
-            bgColor: fieldNameColor
+            bgColor: Color(red: 255/255, green: 243/255, blue: 191/255)
         )
     }
     
@@ -133,7 +136,7 @@ struct OnboardingView: View {
         pillTextField(
             placeholder: languageVM.namePlaceholder(isCompact: false),
             text: $viewModel.firstName,
-            bgColor: fieldNameColor
+            bgColor: Color(red: 255/255, green: 243/255, blue: 191/255)
         )
         .frame(maxWidth: .infinity)
     }
