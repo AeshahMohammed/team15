@@ -3,9 +3,9 @@ import SwiftUI
 struct FoodPage: View {
 
     @StateObject private var viewModel = FoodViewModel()
-    @AppStorage("isArabic") private var isArabic = false   // ✅ ADD THIS
-    @StateObject private var moodVM = CharacterMoodViewModel()
-    
+    @AppStorage("isArabic") private var isArabic = false
+    @Environment(\.dismiss) private var dismiss   // ✅ REQUIRED
+
     var body: some View {
         NavigationStack {
             ScrollView {
