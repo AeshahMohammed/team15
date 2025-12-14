@@ -5,6 +5,7 @@ struct FoodPage: View {
     @StateObject private var viewModel = FoodViewModel()
     @AppStorage("isArabic") private var isArabic = false   // ✅ ADD THIS
     @StateObject private var moodVM = CharacterMoodViewModel()
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         NavigationStack {
