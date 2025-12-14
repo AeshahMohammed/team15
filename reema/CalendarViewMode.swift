@@ -6,28 +6,54 @@ final class CalendarViewModel: ObservableObject {
     @Published var events: [CalendarEvent]
     @Published var completedEvents: Set<UUID> = []
 
-    // ✅ MVVM: times list belongs to ViewModel
+    // ✅ Time values for the wheel pickers
     let times: [String] = CalendarViewModel.buildTimes()
 
-    init() {
-        self.events = [
-            CalendarEvent(englishTitle: "Story time", arabicTitle: "وقت القصة", emoji: "📖", timeLabel: "9:00 – 9:30", color: .red),
-            CalendarEvent(englishTitle: "Playing",   arabicTitle: "وقت اللعب", emoji: "🧸", timeLabel: "10:00 – 10:30", color: .orange.opacity(0.7)),
-            CalendarEvent(englishTitle: "Outside",   arabicTitle: "الخارج",    emoji: "🌳", timeLabel: "11:00 – 11:30", color: .blue),
-            CalendarEvent(englishTitle: "Nap time",  arabicTitle: "وقت القيلولة", emoji: "😴", timeLabel: "1:00 – 2:00", color: .green),
-            CalendarEvent(englishTitle: "Study time", arabicTitle: "وقت الدراسة", emoji: "📚", timeLabel: "4:00 – 4:30", color: .yellow)
-        ]
-    }
-
-    // ✅ MVVM: progress computed here
+    // ✅ Progress (MVVM)
     var progress: Double {
         let total = events.count
         guard total > 0 else { return 0 }
         return Double(completedEvents.count) / Double(total)
     }
 
-    func isCompleted(_ event: CalendarEvent) -> Bool {
-        completedEvents.contains(event.id)
+    init() {
+        self.events = [
+            CalendarEvent(
+                englishTitle: "Story time",
+                arabicTitle: "وقت القصة",
+                emoji: "📖",
+                timeLabel: "9:00 – 9:30",
+                color: .red
+            ),
+            CalendarEvent(
+                englishTitle: "Playing",
+                arabicTitle: "وقت اللعب",
+                emoji: "🧸",
+                timeLabel: "10:00 – 10:30",
+                color: .orange.opacity(0.7)
+            ),
+            CalendarEvent(
+                englishTitle: "Outside",
+                arabicTitle: "الخارج",
+                emoji: "🌳",
+                timeLabel: "11:00 – 11:30",
+                color: .blue
+            ),
+            CalendarEvent(
+                englishTitle: "Nap time",
+                arabicTitle: "وقت القيلولة",
+                emoji: "😴",
+                timeLabel: "1:00 – 2:00",
+                color: .green
+            ),
+            CalendarEvent(
+                englishTitle: "Study time",
+                arabicTitle: "وقت الدراسة",
+                emoji: "📚",
+                timeLabel: "4:00 – 4:30",
+                color: .yellow
+            )
+        ]
     }
 
     func toggleCompletion(for event: CalendarEvent) {
@@ -38,25 +64,10 @@ final class CalendarViewModel: ObservableObject {
         }
     }
 
-    // Original addEvent kept (same signature)
-    func addEvent(
-        englishTitle: String,
-        arabicTitle: String?,
-        emoji: String,
-        timeLabel: String,
-        color: Color
-    ) {
-        let newEvent = CalendarEvent(
-            englishTitle: englishTitle,
-            arabicTitle: arabicTitle?.isEmpty == false ? arabicTitle! : englishTitle,
-            emoji: emoji.isEmpty ? "⭐️" : emoji,
-            timeLabel: timeLabel.isEmpty ? "Any time" : timeLabel,
-            color: color
-        )
-        events.append(newEvent)
+    func isCompleted(_ event: CalendarEvent) -> Bool {
+        completedEvents.contains(event.id)
     }
 
-    // ✅ MVVM helper for the sheet (keeps view clean)
     func addEventFromSheet(
         englishTitle: String,
         arabicTitle: String,
@@ -70,13 +81,14 @@ final class CalendarViewModel: ObservableObject {
         let primaryTitle = !trimmedEN.isEmpty ? trimmedEN : trimmedAR
         guard !primaryTitle.isEmpty else { return }
 
-        addEvent(
+        let newEvent = CalendarEvent(
             englishTitle: primaryTitle,
-            arabicTitle: trimmedAR.isEmpty ? nil : trimmedAR,
-            emoji: emoji,
-            timeLabel: timeLabel,
+            arabicTitle: trimmedAR.isEmpty ? primaryTitle : trimmedAR,
+            emoji: emoji.isEmpty ? "⭐️" : emoji,
+            timeLabel: timeLabel.isEmpty ? "Any time" : timeLabel,
             color: color
         )
+        events.append(newEvent)
     }
 
     private static func buildTimes() -> [String] {

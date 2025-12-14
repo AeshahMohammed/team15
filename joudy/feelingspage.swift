@@ -44,12 +44,18 @@ struct feelingspage: View {
             .navigationTitle(isArabic ? "المشاعر" : "Feelings")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
-                // Back button
+
+                // ✅ Back button (MATCHING YOUR STYLE)
                 ToolbarItem(placement: .navigationBarLeading) {
-                    OvalBackButton()
+                    Button { dismiss() } label: {
+                        HStack {
+                            Text(isArabic ? "الرئيسية  " : " Home " )
+                        }
+                        .foregroundColor(.black)
+                    }
                 }
 
-                // Language toggle
+                // ✅ Language toggle (same as your Activities page)
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         withAnimation { isArabic.toggle() }
@@ -59,9 +65,8 @@ struct feelingspage: View {
                             .foregroundColor(.black)
                             .padding(.horizontal, 14)
                             .padding(.vertical, 8)
-                            .background(Color(red: 0.82, green: 0.88, blue: 1.0))
+                            .background(Color.white)
                             .cornerRadius(14)
-                            .shadow(color: .gray.opacity(0.25), radius: 3, x: 0, y: 2)
                     }
                 }
             }
@@ -73,4 +78,8 @@ struct feelingspage: View {
             .environment(\.layoutDirection, isArabic ? .rightToLeft : .leftToRight)
         }
     }
+}
+
+#Preview {
+    feelingspage()
 }

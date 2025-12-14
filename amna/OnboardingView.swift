@@ -40,12 +40,13 @@ struct OnboardingView: View {
                             languageVM.toggleLanguage()
                         } label: {
                             Text("A/ع")
-                                .font(.system(size: 16, weight: .medium))
+                                .font(.headline)
                                 .foregroundColor(.black)
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 6)
-                                .background(Color(red: 192/255, green: 225/255, blue: 255/255))
+                                .padding(.horizontal, 20)
+                                .padding(.vertical, 8)
+                                .background(Color.white)
                                 .cornerRadius(20)
+                           
                         }
                     }
                     .padding(.horizontal, 20)

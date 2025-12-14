@@ -7,52 +7,54 @@ struct HomeView: View {
     @State private var openNeedsPage = false
     @State private var openActivitiesPage = false
     @State private var openFoodPage = false
-    
+
     @StateObject private var vm = HomeViewModel()
-    
+
     var body: some View {
         ZStack {
             Color.white.ignoresSafeArea()
-            
+
             VStack(spacing: 24) {
-                
+
                 // MARK: - Header (Language + Profile)
                 HStack {
                     Button(action: {
+                        withAnimation {
+                            vm.toggleLanguage()   // ✅ THIS WAS MISSING
+                        }
                     }) {
-                        Text(vm.isArabic ? "A/ع" : "ع/A")
+                        Text(vm.isArabic ? "A / ع" : "ع / A")
                             .font(.headline)
                             .foregroundColor(.black)
                             .padding(.horizontal, 20)
-                            .padding(.vertical, 12)
-                            .background(Color(red: 0.82, green: 0.88, blue: 1.0))
-                            .cornerRadius(20)
-                            .shadow(color: .gray.opacity(0.4), radius: 4, x: 0, y: 2)
+                            .padding(.vertical, 8)
+                            .background(Color.white)
+                            .cornerRadius(14)
                     }
-                    
+
                     Spacer()
-                    
+
                     ProfilePicButton()
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 20)
-                
+
                 // MARK: - Title + Greeting
                 VStack(spacing: 6) {
                     Text(vm.title(for: "pick a section", arabic: "اختر قسماً"))
                         .font(.system(size: 40, weight: .medium))
                         .foregroundColor(.black)
                         .multilineTextAlignment(.center)
-                    
+
                     Text(vm.greetingText)
                         .font(.system(size: 22))
                         .foregroundColor(.black)
                 }
                 .padding(.top, 8)
-                
+
                 // MARK: - Sections
                 VStack(spacing: 24) {
-                    
+
                     HStack(spacing: 40) {
                         ColoredSection(
                             title: vm.title(for: "Activiteis", arabic: "الأنشطة"),
@@ -68,7 +70,7 @@ struct HomeView: View {
                         )
                         .onTapGesture { openNeedsPage = true }
                     }
-                    
+
                     HStack(spacing: 40) {
                         ColoredSection(
                             title: vm.title(for: "People", arabic: "الأشخاص"),
@@ -84,10 +86,8 @@ struct HomeView: View {
                         )
                         .onTapGesture { openFoodPage = true }
                     }
-                    
-                    Button {
-                        showFeelings = true
-                    } label: {
+
+                    Button { showFeelings = true } label: {
                         ColoredSection(
                             title: vm.title(for: "Feeling", arabic: "المشاعر"),
                             color: Color(red: 0.86, green: 1.0, blue: 0.70),
@@ -96,7 +96,7 @@ struct HomeView: View {
                     }
                 }
                 .padding(.horizontal, 20)
-                
+
                 Spacer()
             }
         }

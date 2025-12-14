@@ -16,8 +16,10 @@ struct StartChoiceView: View {
 
             VStack(spacing: 28) {
 
-                // MARK: - زر الرجوع حسب اللغة
-                HStack {
+                // MARK: - Top Bar (Back + Language)
+                HStack(spacing: 12) {
+
+                    // Back (mirrors position with RTL)
                     if languageVM.current.isRTL {
                         Spacer()
                         Button(action: { dismiss() }) {
@@ -33,18 +35,33 @@ struct StartChoiceView: View {
                         }
                         Spacer()
                     }
+
+                    // ✅ Language Button
+                    Button {
+                        withAnimation {
+                            languageVM.current = (languageVM.current == .arabic) ? .english : .arabic
+                        }
+                    } label: {
+                        Text(languageVM.current == .arabic ? "A / ع" : "ع / A")
+                            .font(.headline)
+                            .foregroundColor(.black)
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 8)
+                            .background(Color.white)
+                            .cornerRadius(14)
+                    }
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 16)
 
-                // MARK: - الترحيب
+                // MARK: - Greeting
                 Text(greetingText)
                     .font(.system(size: 30, weight: .semibold))
                     .foregroundColor(.black)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 24)
 
-                // MARK: - صورة الشخصية
+                // MARK: - Profile Image
                 Image("taif")
                     .resizable()
                     .scaledToFit()
@@ -53,7 +70,7 @@ struct StartChoiceView: View {
 
                 Spacer().frame(height: 6)
 
-                // MARK: - زر "مساعد تواصلي"
+                // MARK: - Communication helper
                 NavigationLink {
                     HomeView().environmentObject(languageVM)
                 } label: {
@@ -67,9 +84,9 @@ struct StartChoiceView: View {
                 }
                 .padding(.horizontal, 40)
 
-                // MARK: - زر "جدول المهام" -> opens calendarpage
+                // MARK: - Tasks board
                 NavigationLink {
-                    calendarpage()          // 👈 your autistic-friendly calendar
+                    calendarpage()
                 } label: {
                     Text(tasksTitle)
                         .font(.system(size: 20, weight: .semibold))
@@ -90,7 +107,6 @@ struct StartChoiceView: View {
     }
 
     // MARK: - Texts
-
     private var helperTitle: String {
         languageVM.current == .arabic ? "مساعد تواصلي" : "Communication helper"
     }
@@ -110,6 +126,6 @@ struct StartChoiceView: View {
 }
 
 #Preview {
-    StartChoiceView(user: UserProfile(firstName: "نجد", age: 7))
+    StartChoiceView(user: UserProfile(firstName: "", age: 7))
         .environmentObject(LanguageViewModel())
 }
