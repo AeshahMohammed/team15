@@ -2,32 +2,20 @@ import SwiftUI
 
 // MARK: - Main Calendar Page (View)
 struct calendarpage: View {
-    @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject var languageVM: LanguageViewModel
+
     @AppStorage("isArabic") private var isArabic = false
     @StateObject private var viewModel = CalendarViewModel()
-
     @State private var showAddSheet = false
 
-    private var progress: Double {
-        let total = viewModel.events.count
-        guard total > 0 else { return 0 }
-        return Double(viewModel.completedEvents.count) / Double(total)
-    }
-
     var body: some View {
-       
         NavigationStack {
-            
             ZStack(alignment: .bottomTrailing) {
-                Color(.systemGray6)
-                    .ignoresSafeArea()
-                    
+                Color(.systemGray6).ignoresSafeArea()
+
                 ScrollView {
                     VStack(spacing: 16) {
 
-                       
-                        // ✅ Progress Bar
+                        // Progress bar (MVVM)
                         VStack(alignment: .leading, spacing: 8) {
                             HStack {
                                 Text(isArabic ? "الإنجاز" : "Progress")
@@ -35,15 +23,11 @@ struct calendarpage: View {
 
                                 Spacer()
 
-                                Text("\(Int(progress * 100))%")
+                                Text("\(Int(viewModel.progress * 100))%")
                                     .font(.system(size: 16, weight: .bold))
                                     .foregroundColor(.green)
                             }
-                            .toolbar {
-                                                          ToolbarItem(placement: .navigationBarLeading) {
-                                                              OvalBackButton()
-                                                          }
-                                                      }
+
                             GeometryReader { geo in
                                 ZStack(alignment: .leading) {
                                     Capsule()
@@ -52,8 +36,8 @@ struct calendarpage: View {
 
                                     Capsule()
                                         .fill(Color.green)
-                                        .frame(width: geo.size.width * progress, height: 14)
-                                        .animation(.easeInOut(duration: 0.25), value: progress)
+                                        .frame(width: geo.size.width * viewModel.progress, height: 14)
+                                        .animation(.easeInOut(duration: 0.25), value: viewModel.progress)
                                 }
                             }
                             .frame(height: 14)
@@ -61,12 +45,12 @@ struct calendarpage: View {
                         .padding(.horizontal)
                         .padding(.top, 8)
 
-                        // Calendar cards
+                        // Cards
                         ForEach(viewModel.events) { event in
                             CalendarCard(
                                 event: event,
                                 isArabic: isArabic,
-                                isDone: viewModel.completedEvents.contains(event.id)
+                                isDone: viewModel.isCompleted(event)
                             )
                             .onTapGesture {
                                 viewModel.toggleCompletion(for: event)
@@ -78,7 +62,7 @@ struct calendarpage: View {
                     .padding(.bottom)
                 }
 
-                // Floating + button (bigger + lower + perfectly round)
+                // Floating +
                 Button {
                     showAddSheet = true
                 } label: {
@@ -88,56 +72,46 @@ struct calendarpage: View {
                         .frame(width: 78, height: 78)
                         .background(Color.green)
                         .clipShape(Circle())
-                        .shadow(color: .black.opacity(0.22),
-                                radius: 8, x: 0, y: 5)
+                        .shadow(color: .black.opacity(0.22), radius: 8, x: 0, y: 5)
                 }
                 .padding(.trailing, 18)
                 .padding(.bottom, 18)
             }
             .navigationTitle(isArabic ? "جدولي" : "My calendar")
             .navigationBarTitleDisplayMode(.large)
-
-            // ✅ Gray Arabic/English button next to the title
+            .navigationBarBackButtonHidden(true) // prevents double back button
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    OvalBackButton()
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
-                        isArabic.toggle()
+                        withAnimation { isArabic.toggle() }
                     } label: {
-                        Text("A / ع")
-                            .font(.system(size: 14, weight: .medium))
+                        Text(isArabic ? "A/ع" : "ع/A")
+                            .font(.headline)
                             .foregroundColor(.black)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(Color.gray.opacity(0.3))
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 8)
+                            .background(Color(red: 0.82, green: 0.88, blue: 1.0))
                             .cornerRadius(14)
+                            .shadow(color: .gray.opacity(0.25), radius: 3, x: 0, y: 2)
                     }
                 }
             }
-
             .environment(\.layoutDirection, isArabic ? .rightToLeft : .leftToRight)
             .sheet(isPresented: $showAddSheet) {
-                AddCalendarEventView(
-                    isArabic: isArabic,
-                    viewModel: viewModel
-                )
-            }
-            // Force English (optional)
-            .onAppear {
-                isArabic = false
+                AddCalendarEventView(isArabic: isArabic, viewModel: viewModel)
             }
         }
     }
 }
 
-// MARK: - Calendar Card View (View)
+// MARK: - Calendar Card
 struct CalendarCard: View {
     let event: CalendarEvent
     let isArabic: Bool
     let isDone: Bool
-
-    var titleText: String {
-        isArabic ? event.arabicTitle : event.englishTitle
-    }
 
     var body: some View {
         HStack(spacing: 16) {
@@ -150,7 +124,7 @@ struct CalendarCard: View {
                     .foregroundColor(.secondary)
             }
 
-            Text(titleText)
+            Text(isArabic ? event.arabicTitle : event.englishTitle)
                 .font(.system(size: 24, weight: .bold, design: .rounded))
                 .foregroundColor(.primary)
 
@@ -170,17 +144,14 @@ struct CalendarCard: View {
         )
         .overlay(
             RoundedRectangle(cornerRadius: 26)
-                .strokeBorder(
-                    isDone ? Color.green.opacity(0.8) : Color.clear,
-                    lineWidth: 3
-                )
+                .strokeBorder(isDone ? Color.green.opacity(0.8) : Color.clear, lineWidth: 3)
         )
         .padding(.horizontal)
         .animation(.easeInOut(duration: 0.2), value: isDone)
     }
 }
 
-// MARK: - Add Event Sheet (View)
+// MARK: - Add Event Sheet
 struct AddCalendarEventView: View {
     @Environment(\.dismiss) private var dismiss
 
@@ -190,12 +161,9 @@ struct AddCalendarEventView: View {
     @State private var englishTitle: String = ""
     @State private var arabicTitle: String = ""
 
-    // Emoji picker
     private let emojis = ["📖","🧸","🌳","😴","📚","🎵","🍽️","⚽️","🎨","🛁","🚗","⭐️"]
     @State private var selectedEmoji: String = "⭐️"
 
-    // Time picker (scroll)
-    private let times: [String] = AddCalendarEventView.buildTimes()
     @State private var startIndex: Int = 6
     @State private var endIndex: Int = 7
 
@@ -203,19 +171,17 @@ struct AddCalendarEventView: View {
     @State private var colorIndex: Int = 0
 
     private var timeLabel: String {
-        "\(times[startIndex]) – \(times[endIndex])"
+        "\(viewModel.times[startIndex]) – \(viewModel.times[endIndex])"
     }
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 18) {
 
-                TextField(isArabic ? "العنوان بالإنجليزية" : "Title (English)",
-                          text: $englishTitle)
+                TextField(isArabic ? "العنوان بالإنجليزية" : "Title (English)", text: $englishTitle)
                     .textFieldStyle(.roundedBorder)
 
-                TextField(isArabic ? "العنوان بالعربية (اختياري)" : "Title (Arabic, optional)",
-                          text: $arabicTitle)
+                TextField(isArabic ? "العنوان بالعربية (اختياري)" : "Title (Arabic, optional)", text: $arabicTitle)
                     .textFieldStyle(.roundedBorder)
 
                 // Emoji picker grid
@@ -229,37 +195,33 @@ struct AddCalendarEventView: View {
                                 .font(.system(size: 36))
                                 .frame(width: 60, height: 60)
                                 .background(
-                                    Circle()
-                                        .fill(selectedEmoji == emoji ? Color.green.opacity(0.3) : Color.clear)
+                                    Circle().fill(selectedEmoji == emoji ? Color.green.opacity(0.3) : Color.clear)
                                 )
                                 .overlay(
-                                    Circle()
-                                        .stroke(selectedEmoji == emoji ? Color.green : Color.clear, lineWidth: 3)
+                                    Circle().stroke(selectedEmoji == emoji ? Color.green : Color.clear, lineWidth: 3)
                                 )
-                                .onTapGesture {
-                                    selectedEmoji = emoji
-                                }
+                                .onTapGesture { selectedEmoji = emoji }
                         }
                     }
                 }
 
-                // Time scroll picker
+                // Time scroll pickers
                 VStack(alignment: .leading, spacing: 10) {
                     Text(isArabic ? "الوقت" : "Time")
                         .font(.system(size: 18, weight: .bold))
 
                     HStack {
                         Picker("", selection: $startIndex) {
-                            ForEach(times.indices, id: \.self) {
-                                Text(times[$0]).tag($0)
+                            ForEach(viewModel.times.indices, id: \.self) { i in
+                                Text(viewModel.times[i]).tag(i)
                             }
                         }
                         .pickerStyle(.wheel)
                         .frame(width: 140, height: 120)
 
                         Picker("", selection: $endIndex) {
-                            ForEach(times.indices, id: \.self) {
-                                Text(times[$0]).tag($0)
+                            ForEach(viewModel.times.indices, id: \.self) { i in
+                                Text(viewModel.times[i]).tag(i)
                             }
                         }
                         .pickerStyle(.wheel)
@@ -272,19 +234,15 @@ struct AddCalendarEventView: View {
                 }
                 .padding(.vertical, 6)
                 .onChange(of: startIndex) { _, newValue in
-                    if endIndex <= newValue {
-                        endIndex = min(newValue + 1, times.count - 1)
-                    }
+                    if endIndex <= newValue { endIndex = min(newValue + 1, viewModel.times.count - 1) }
                 }
                 .onChange(of: endIndex) { _, newValue in
-                    if newValue <= startIndex {
-                        startIndex = max(newValue - 1, 0)
-                    }
+                    if newValue <= startIndex { startIndex = max(newValue - 1, 0) }
                 }
                 .onAppear {
-                    if let nine = times.firstIndex(of: "9:00") {
+                    if let nine = viewModel.times.firstIndex(of: "9:00") {
                         startIndex = nine
-                        endIndex = min(nine + 1, times.count - 1)
+                        endIndex = min(nine + 1, viewModel.times.count - 1)
                     }
                 }
 
@@ -300,30 +258,20 @@ struct AddCalendarEventView: View {
                                 .font(.system(size: 12, weight: .bold))
                                 .foregroundColor(.white)
                         )
-                        .onTapGesture {
-                            colorIndex = (colorIndex + 1) % colors.count
-                        }
+                        .onTapGesture { colorIndex = (colorIndex + 1) % colors.count }
                 }
                 .padding(.top, 4)
 
                 Spacer()
 
-                // Add even if English is empty (use Arabic if needed)
                 Button(isArabic ? "إضافة للنشاطات" : "Add to calendar") {
-                    let trimmedEN = englishTitle.trimmingCharacters(in: .whitespacesAndNewlines)
-                    let trimmedAR = arabicTitle.trimmingCharacters(in: .whitespacesAndNewlines)
-
-                    let primaryTitle = !trimmedEN.isEmpty ? trimmedEN : trimmedAR
-                    guard !primaryTitle.isEmpty else { return }
-
-                    viewModel.addEvent(
-                        englishTitle: primaryTitle,
-                        arabicTitle: trimmedAR.isEmpty ? nil : trimmedAR,
+                    viewModel.addEventFromSheet(
+                        englishTitle: englishTitle,
+                        arabicTitle: arabicTitle,
                         emoji: selectedEmoji,
                         timeLabel: timeLabel,
                         color: colors[colorIndex]
                     )
-
                     dismiss()
                 }
                 .font(.system(size: 20, weight: .bold))
@@ -338,23 +286,11 @@ struct AddCalendarEventView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button(isArabic ? "إلغاء" : "Cancel") {
-                        dismiss()
-                    }
+                    Button(isArabic ? "إلغاء" : "Cancel") { dismiss() }
                 }
             }
         }
         .environment(\.layoutDirection, isArabic ? .rightToLeft : .leftToRight)
-    }
-
-    // MARK: - Helpers
-    private static func buildTimes() -> [String] {
-        var result: [String] = []
-        for hour in 6...22 {
-            result.append("\(hour):00")
-            result.append("\(hour):30")
-        }
-        return result
     }
 }
 
@@ -363,4 +299,3 @@ struct AddCalendarEventView: View {
     calendarpage()
         .environmentObject(LanguageViewModel())
 }
-
