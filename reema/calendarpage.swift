@@ -6,6 +6,7 @@ struct calendarpage: View {
     @AppStorage("isArabic") private var isArabic = false
     @StateObject private var viewModel = CalendarViewModel()
     @State private var showAddSheet = false
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         NavigationStack {
@@ -15,7 +16,7 @@ struct calendarpage: View {
                 ScrollView {
                     VStack(spacing: 16) {
 
-                        // Progress bar (MVVM)
+                        // ✅ Progress Bar (MVVM)
                         VStack(alignment: .leading, spacing: 8) {
                             HStack {
                                 Text(isArabic ? "الإنجاز" : "Progress")
@@ -52,9 +53,7 @@ struct calendarpage: View {
                                 isArabic: isArabic,
                                 isDone: viewModel.isCompleted(event)
                             )
-                            .onTapGesture {
-                                viewModel.toggleCompletion(for: event)
-                            }
+                            .onTapGesture { viewModel.toggleCompletion(for: event) }
                         }
 
                         Spacer(minLength: 40)
@@ -63,9 +62,7 @@ struct calendarpage: View {
                 }
 
                 // Floating +
-                Button {
-                    showAddSheet = true
-                } label: {
+                Button { showAddSheet = true } label: {
                     Image(systemName: "plus")
                         .font(.system(size: 34, weight: .bold))
                         .foregroundColor(.white)
@@ -79,12 +76,18 @@ struct calendarpage: View {
             }
             .navigationTitle(isArabic ? "جدولي" : "My calendar")
             .navigationBarTitleDisplayMode(.large)
-            .navigationBarBackButtonHidden(true) // prevents double back button
+            .navigationBarBackButtonHidden(true) // ✅ prevents system back button
             .toolbar {
+
+                // ✅ Back button (MATCHES your Activities style)
                 ToolbarItem(placement: .navigationBarLeading) {
-                    OvalBackButton()
-                    
+                    Button { dismiss() } label: {
+                        Text(isArabic ? "الرئيسية  " : " Home ")
+                            .foregroundColor(.black)
+                    }
                 }
+
+                // ✅ Language toggle (MATCHES your Activities style)
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         withAnimation { isArabic.toggle() }
@@ -96,7 +99,6 @@ struct calendarpage: View {
                             .padding(.vertical, 8)
                             .background(Color.white)
                             .cornerRadius(14)
-                           
                     }
                 }
             }
@@ -185,7 +187,7 @@ struct AddCalendarEventView: View {
                 TextField(isArabic ? "العنوان بالعربية (اختياري)" : "Title (Arabic, optional)", text: $arabicTitle)
                     .textFieldStyle(.roundedBorder)
 
-                // Emoji picker grid
+                // Emoji picker
                 VStack(alignment: .leading, spacing: 10) {
                     Text(isArabic ? "اختر رمز" : "Choose an emoji")
                         .font(.system(size: 18, weight: .bold))
@@ -206,7 +208,7 @@ struct AddCalendarEventView: View {
                     }
                 }
 
-                // Time scroll pickers
+                // ✅ Time scroll pickers (kept)
                 VStack(alignment: .leading, spacing: 10) {
                     Text(isArabic ? "الوقت" : "Time")
                         .font(.system(size: 18, weight: .bold))
@@ -298,5 +300,4 @@ struct AddCalendarEventView: View {
 // MARK: - Preview
 #Preview {
     calendarpage()
-        .environmentObject(LanguageViewModel())
 }
