@@ -8,6 +8,7 @@ import SwiftUI
 struct SplashView: View {
     
     @State private var animate = false
+    
     @State private var goHome = false
     
     var body: some View {
